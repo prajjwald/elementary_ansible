@@ -3,6 +3,9 @@
   gather_facts: true
   hosts: all
   become: no
+  vars:
+      plank_dockitems_path: "$HOME/.config/plank/dock1/launchers"
+      plank_dockitems_to_remove: [ "org.pantheon.mail.dockitem", "org.gnome.Epiphany.dockitem" ]
 
   tasks:
       - name: Add Nepali Keyboard Layout
@@ -15,21 +18,20 @@
             gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-left "['<Control><Super>Left']";
             gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-right "['<Control><Super>Right']";
 
-      - name: Launcher items file glob
-        find:
-            paths: $HOME/.config/plank/dock1/launchers
-            patterns: "*.dockitem"
-        register: dockitems_to_delete
+      - name: Enable night-light, set it to automatic schedule
+        shell: |
+            gsettings set org.gnome.settings-daemon.plugins.color night-light-enabled "true"
+            gsettings set org.gnome.settings-daemon.plugins.color night-light-schedule-automatic "true"
 
-      - name: Remove Launcher items glob
+      - name: Remove Some Launcher items glob
         file:
-            path: "{{ item.path }}"
+            path: "{{ plank_dockitems_path }}/{{ item }}"
             state: absent
-        with_items: "{{ dockitems_to_delete.files }}"
+        with_items: "{{ plank_dockitems_to_remove }}"
 
       - name: Copy Launcher items
         copy:
             src: "{{ item }}"
-            dest: "$HOME/.config/plank/dock1/launchers"
+            dest: "{{ plank_dockitems_path }}"
         with_fileglob:
             - "files/elementary/launchers/*"
