@@ -3,7 +3,10 @@
 echo "Installing some basic packages first";
 
 sudo apt-get update
-sudo apt-get install -y ansible gpg
+sudo apt-get install -y gpg software-properties-common
+sudo apt-add-repository -yu ppa:ansible/ansible
+sudo apt-get install -y ansible
+sudo apt-get -y upgrade
 
 echo "Running ansible"
 #no need for the -K option, as we just sudo'd twice
