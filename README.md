@@ -5,8 +5,9 @@ This repository contains some customizations to elementary os that I find fairly
 ## Quick Start
 
 ```bash
-git clone https://github.com/prajjwald/elementary_ansible.git
-cd elementary_ansible
+sudo apt-get install -y git &&\
+git clone https://github.com/prajjwald/elementary_ansible.git &&\
+cd elementary_ansible &&\
 ./launcher.sh
 ```
 
@@ -85,3 +86,10 @@ The repository can be broken down roughly as:
 - docker, docker-compose
 - lxd
 
+## TODO
+
+- Allow configurability of groups of tasks to carry out, e.g.
+  - Basic Packages
+  - Development + Virtualization + Power Tools
+  - Desktop (Re)Configuration
+  - VSCode addons installation

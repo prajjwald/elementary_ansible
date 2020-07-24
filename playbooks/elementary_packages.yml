@@ -155,6 +155,7 @@
               - fonts-lohit-deva
               - fonts-deva-extra
               - firefox-locale-ne
+              - typecatcher
               # Games
               - steam
               # Other
