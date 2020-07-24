@@ -3,7 +3,8 @@
 echo "Installing some basic packages first";
 
 sudo apt-get update
-sudo apt-get install -y gpg software-properties-common
+sudo apt-get install -y git gpg software-properties-common
+git pull # Not making any assumptions about how this directory got created initially
 sudo apt-add-repository -yu ppa:ansible/ansible
 sudo apt-get install -y ansible
 sudo apt-get -y upgrade

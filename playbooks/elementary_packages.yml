@@ -180,6 +180,10 @@
         snap:
             name: caprine
 
+      - name: Install Zoom from snap
+        snap:
+            name: zoom-client
+
       - name: Install Viber from deb
         apt:
           deb: https://download.cdn.viber.com/cdn/desktop/Linux/viber.deb

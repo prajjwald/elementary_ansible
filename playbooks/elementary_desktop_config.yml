@@ -23,6 +23,9 @@
             gsettings set org.gnome.settings-daemon.plugins.color night-light-enabled "true"
             gsettings set org.gnome.settings-daemon.plugins.color night-light-schedule-automatic "true"
 
+      - name: Set dock icon size to small
+        command: dconf write /net/launchpad/plank/docks/dock1/icon-size 32
+
       - name: Remove Some Launcher items glob
         file:
             path: "{{ plank_dockitems_path }}/{{ item }}"

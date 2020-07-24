@@ -2,7 +2,15 @@
 
 This repository contains some customizations to elementary os that I find fairly useful.
 
-## Quick Start
+## Quick Start for One Time Users
+
+```
+wget -c https://raw.githubusercontent.com/prajjwald/elementary_ansible/master/quickstart/quickstart.sh
+chmod +x quickstart.sh && ./quickstart.sh
+```
+
+
+## Quick Start for Normal Users
 
 ```bash
 sudo apt-get install -y git &&\
@@ -10,6 +18,14 @@ git clone https://github.com/prajjwald/elementary_ansible.git &&\
 cd elementary_ansible &&\
 ./launcher.sh
 ```
+## Goals
+
+There are several goals I have in creating/maintaining this repository
+
+* Having a quick way to get my elementary OS (re)installation get restored to a useful state for myself with minimal user interaction
+* Allowing me to get new elementary installations of family and friends to a similarly 'usable' state, with certain programs, fonts, setups, etc. already in place
+* Allowing me to share ideas with anyone else who might be interested
+
 
 ## Repository Organization
 
