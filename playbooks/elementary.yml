@@ -1,0 +1,9 @@
+---
+- name: Setup for machine
+  hosts: localhost
+  connection: local
+  gather_facts: true
+
+  tasks:
+- import_playbook: elementary_packages.yml
+- import_playbook: elementary_desktop_config.yml

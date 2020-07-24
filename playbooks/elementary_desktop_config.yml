@@ -1,0 +1,35 @@
+---
+- name: Elementary OS Desktop Configuration for user
+  gather_facts: true
+  hosts: all
+  become: no
+
+  tasks:
+      - name: Add Nepali Keyboard Layout
+        command: gsettings set org.gnome.desktop.input-sources sources "[('xkb', 'us'), ('xkb', 'np')]"
+
+      - name: Make Window Tiling and Desktop Switching Keys Mimic Windows
+        shell: |
+            gsettings set org.gnome.mutter.keybindings toggle-tiled-left "['<Super>Left']";
+            gsettings set org.gnome.mutter.keybindings toggle-tiled-right "['<Super>Right']";
+            gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-left "['<Control><Super>Left']";
+            gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-right "['<Control><Super>Right']";
+
+      - name: Launcher items file glob
+        find:
+            paths: $HOME/.config/plank/dock1/launchers
+            patterns: "*.dockitem"
+        register: dockitems_to_delete
+
+      - name: Remove Launcher items glob
+        file:
+            path: "{{ item.path }}"
+            state: absent
+        with_items: "{{ dockitems_to_delete.files }}"
+
+      - name: Copy Launcher items
+        copy:
+            src: "{{ item }}"
+            dest: "$HOME/.config/plank/dock1/launchers"
+        with_fileglob:
+            - "files/elementary/launchers/*"
