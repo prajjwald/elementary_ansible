@@ -7,24 +7,44 @@
       plank_dockitems_path: "$HOME/.config/plank/dock1/launchers"
       plank_dockitems_to_remove: [ "org.pantheon.mail.dockitem", "org.gnome.Epiphany.dockitem" ]
 
+      tiling_path: "/org/gnome/mutter/keybindings"
+      tiling_shortcuts:
+          toggle-tiled-left: "['<Super>Left']"
+          toggle-tiled-right: "['<Super>Right']"
+          switch-to-workspace-left: "['<Control><Super>Left']"
+          switch-to-workspace-right: "['<Control><Super>Right']"
+
+      night_light_path: "/org/gnome/settings-daemon/plugins/color"
+      night_light_settings:
+          night-light-enabled: "true"
+          night-light-schedule-automatic: "true"
+
   tasks:
       - name: Add Nepali Keyboard Layout
-        command: gsettings set org.gnome.desktop.input-sources sources "[('xkb', 'us'), ('xkb', 'np')]"
+        dconf:
+            key: "/org/gnome/desktop/input-sources/sources"
+            value: "[('xkb', 'us'), ('xkb', 'np')]"
+            state: present
 
       - name: Make Window Tiling and Desktop Switching Keys Mimic Windows
-        shell: |
-            gsettings set org.gnome.mutter.keybindings toggle-tiled-left "['<Super>Left']";
-            gsettings set org.gnome.mutter.keybindings toggle-tiled-right "['<Super>Right']";
-            gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-left "['<Control><Super>Left']";
-            gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-right "['<Control><Super>Right']";
+        dconf:
+            key: "{{ tiling_path }}/{{ item.key }}"
+            value: "{{ item.value | string}}"
+            state: present
+        with_dict: "{{ tiling_shortcuts }}"
 
       - name: Enable night-light, set it to automatic schedule
-        shell: |
-            gsettings set org.gnome.settings-daemon.plugins.color night-light-enabled "true"
-            gsettings set org.gnome.settings-daemon.plugins.color night-light-schedule-automatic "true"
+        dconf:
+            key: "{{ night_light_path }}/{{ item.key }}"
+            value: "{{ item.value | string}}"
+            state: present
+        with_dict: "{{ night_light_settings }}"
 
       - name: Set dock icon size to small
-        command: dconf write /net/launchpad/plank/docks/dock1/icon-size 32
+        dconf:
+            key: "/net/launchpad/plank/docks/dock1/icon-size"
+            value: "32"
+            state: present
 
       - name: Remove Some Launcher items glob
         file:
