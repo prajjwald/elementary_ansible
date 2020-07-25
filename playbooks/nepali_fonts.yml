@@ -1,0 +1,16 @@
+---
+- name: Install Elementary OS specific packages
+  gather_facts: true
+  user: root
+  become: yes
+  hosts: all
+
+  tasks:
+
+      - name: copy nepali fonts
+        copy:
+            src: files/fonts/nepali_fonts
+            dest: /usr/local/share/fonts/
+
+      - name: update fonts cache
+        command: fc-cache -fv
