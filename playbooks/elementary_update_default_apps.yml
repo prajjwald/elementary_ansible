@@ -1,0 +1,18 @@
+---
+- name: Elementary OS Desktop Configuration for user
+  gather_facts: true
+  hosts: all
+  become: no
+ 
+  vars:
+      mailspring_mimetypes: [ "x-scheme-handler/mailto", "x-scheme-handler/mailto;" ]
+      internet_mimetypes: [ "application/x-extension-htm", "application/x-extension-html", "application/x-extension-shtml", "application/x-extension-xht", "application/xhtml+xml", "text/html", "text/html;text/xml;application/xhtml+xml;x-scheme-handler/http;x-scheme-handler/https;multipart/related;application/x-mimearchive;message/rfc822;", "x-scheme-handler/http", "x-scheme-handler/https" ]
+
+  tasks:
+      - name: Update mail default apps
+        command: xdg-mime default mailspring_mailspring.desktop {{ item }}
+        with_items: "{{ mailspring_mimetypes }}"
+
+      - name: Update default browser to firefox
+        command: xdg-mime default firefox.desktop {{ item }}
+        with_items: "{{ internet_mimetypes }}"

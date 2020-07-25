@@ -58,3 +58,5 @@
             dest: "{{ plank_dockitems_path }}"
         with_fileglob:
             - "files/elementary/launchers/*"
+
+- import_playbook: elementary_update_default_apps.yml

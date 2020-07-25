@@ -160,6 +160,7 @@
               - fonts-deva-extra
               - firefox-locale-ne
               - typecatcher
+              - pandoc
               # Games
               - steam
               # Other

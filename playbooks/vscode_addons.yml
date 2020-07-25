@@ -4,17 +4,24 @@
   hosts: all
   become: no
   vars:
-      vscode_extensions_list: [ "golang.go", 
-      "ms-azuretools.vscode-docker",
-      "ms-python.python",
-      "ms-python.vscode-pylance",
-      "ms-vscode.cmake-tools",
-      "ms-vscode.cpptools",
-      "ms-vscode.Theme-1337",
-      "VisualStudioExptTeam.vscodeintellicode",
-      "vscodevim.vim",
-      "vscoss.vscode-ansible",
-      "xaver.clang-format" ]
+      vscode_extensions_list: [
+          "go2sh.cmake-integration-vscode",
+          "golang.go",
+          "ms-azuretools.vscode-docker",
+          "ms-python.python",
+          "ms-python.vscode-pylance",
+          "ms-vscode.cmake-tools",
+          "ms-vscode.cpptools",
+          "ms-vscode.Theme-1337",
+          "mtxr.sqltools",
+          "mtxr.sqltools-driver-mysql",
+          "mtxr.sqltools-driver-sqlite",
+          "twxs.cmake",
+          "VisualStudioExptTeam.vscodeintellicode",
+          "vscodevim.vim",
+          "vscoss.vscode-ansible",
+          "xaver.clang-format"
+          ]
 
   tasks:
       - name: Install VSCode Extensions
