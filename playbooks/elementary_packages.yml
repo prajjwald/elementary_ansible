@@ -56,6 +56,18 @@
             state: present
             filename: brave
 
+      - name: Atom Key
+        apt_key:
+            url: https://packagecloud.io/AtomEditor/atom/gpgkey
+            state: present
+
+      - name: Atom Repository
+        apt_repository:
+            repo: "deb [arch=amd64] https://packagecloud.io/AtomEditor/atom/any/ any main"
+            state: present
+            filename: atom
+            update_cache: yes
+
       - name: VSCode Key
         apt_key:
             url: https://packages.microsoft.com/keys/microsoft.asc
@@ -114,6 +126,7 @@
               - net-tools
               #useful desktop tools
               - typora
+              - atom
               - nextcloud-client
               - brave-browser
               - code
