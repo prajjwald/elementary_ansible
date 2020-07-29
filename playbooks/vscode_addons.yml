@@ -5,8 +5,10 @@
   become: no
   vars:
       vscode_extensions_list: [
+          "DavidAnson.vscode-markdownlint",
           "go2sh.cmake-integration-vscode",
           "golang.go",
+          "inu1255.easy-snippet",
           "ms-azuretools.vscode-docker",
           "ms-python.python",
           "ms-python.vscode-pylance",
@@ -16,6 +18,7 @@
           "mtxr.sqltools",
           "mtxr.sqltools-driver-mysql",
           "mtxr.sqltools-driver-sqlite",
+          "shd101wyy.markdown-preview-enhanced",
           "twxs.cmake",
           "VisualStudioExptTeam.vscodeintellicode",
           "vscodevim.vim",
