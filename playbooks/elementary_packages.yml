@@ -124,6 +124,9 @@
               - docker-compose
               - containerd.io
               - net-tools
+              - graphviz
+              - graphviz-doc
+              - xdot
               #useful desktop tools
               - typora
               - atom
@@ -137,6 +140,8 @@
               - com.github.lainsce.palaura
               - com.github.dr-styki.screenrec
               - com.github.lainsce.notejot
+              #drivers
+              - printer-driver-cjet
               #build tools
               - build-essential
               - cmake
