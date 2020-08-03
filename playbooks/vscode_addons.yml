@@ -23,7 +23,8 @@
           "VisualStudioExptTeam.vscodeintellicode",
           "vscodevim.vim",
           "vscoss.vscode-ansible",
-          "xaver.clang-format"
+          "xaver.clang-format",
+          "jebbs.plantuml"
           ]
 
   tasks:
