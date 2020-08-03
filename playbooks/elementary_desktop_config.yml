@@ -11,6 +11,9 @@
       tiling_shortcuts:
           toggle-tiled-left: "['<Super>Left']"
           toggle-tiled-right: "['<Super>Right']"
+
+      workspace_path: "/org/gnome/desktop/wm/keybindings"
+      workspace_shortcuts:
           switch-to-workspace-left: "['<Control><Super>Left']"
           switch-to-workspace-right: "['<Control><Super>Right']"
 
@@ -26,12 +29,19 @@
             value: "[('xkb', 'us'), ('xkb', 'np')]"
             state: present
 
-      - name: Make Window Tiling and Desktop Switching Keys Mimic Windows
+      - name: Make Window Tiling Keys Mimic Windows
         dconf:
             key: "{{ tiling_path }}/{{ item.key }}"
             value: "{{ item.value | string}}"
             state: present
         with_dict: "{{ tiling_shortcuts }}"
+
+      - name: Make Desktop Switching Keys Mimic Windows
+        dconf:
+            key: "{{ workspace_path }}/{{ item.key }}"
+            value: "{{ item.value | string}}"
+            state: present
+        with_dict: "{{ workspace_shortcuts }}"
 
       - name: Enable night-light, set it to automatic schedule
         dconf:
