@@ -215,6 +215,10 @@
         apt:
             deb: https://www.dropbox.com/download?dl=packages/ubuntu/dropbox_2020.03.04_amd64.deb
 
+      - name: Install draw.io from deb
+        apt:
+          deb: https://github.com/jgraph/drawio-desktop/releases/download/v13.5.7/draw.io-amd64-13.5.7.deb
+
       - name: Install hackmyresume globally
         npm:
           name: hacksalot/hackmyresume
