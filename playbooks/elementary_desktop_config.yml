@@ -7,6 +7,8 @@
       plank_dockitems_path: "$HOME/.config/plank/dock1/launchers"
       plank_dockitems_to_remove: [ "org.pantheon.mail.dockitem", "org.gnome.Epiphany.dockitem" ]
 
+      autostart_items_path: "$HOME/.config/autostart"
+
       tiling_path: "/org/gnome/mutter/keybindings"
       tiling_shortcuts:
           toggle-tiled-left: "['<Super>Left']"
@@ -19,7 +21,9 @@
 
       night_light_path: "/org/gnome/settings-daemon/plugins/color"
       night_light_settings:
-          night-light-enabled: "true"
+          # explicitly disable night-light until bug with multi-displays is fixed
+          # use redshift-gtk in startup instead until then
+          night-light-enabled: "false"
           night-light-schedule-automatic: "true"
 
   tasks:
@@ -68,5 +72,12 @@
             dest: "{{ plank_dockitems_path }}"
         with_fileglob:
             - "files/elementary/launchers/*"
+
+      - name: Copy AutoStart Items
+        copy:
+            src: "{{ item }}"
+            dest: "{{ autostart_items_path }}"
+        with_fileglob:
+            - "files/elementary/autostart/*"
 
 - import_playbook: elementary_update_default_apps.yml

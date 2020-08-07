@@ -190,6 +190,9 @@
               - git
               - gitk
               - gpg
+              # I'd love to stick to the default night-light settings only
+              # but there are known issues with multi-monitor setups.  Redshift-gtk works perfectly however.
+              - redshift-gtk
 
       - name: Install LXD from snap
         snap:
