@@ -134,6 +134,7 @@
               - brave-browser
               - code
               - spotify-client
+              - freeplane
               # elementary OS apps
               - com.github.alainm23.planner
               - com.github.babluboy.bookworm
