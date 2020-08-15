@@ -127,6 +127,7 @@
               - graphviz
               - graphviz-doc
               - xdot
+              - diffuse
               #useful desktop tools
               - typora
               - atom
@@ -135,12 +136,20 @@
               - code
               - spotify-client
               - freeplane
+              # Chess!!
+              - stockfish
+              - scid
+              - toga2
+              - phalanx
               # elementary OS apps
               - com.github.alainm23.planner
               - com.github.babluboy.bookworm
               - com.github.lainsce.palaura
               - com.github.dr-styki.screenrec
               - com.github.lainsce.notejot
+              # Mathematics
+              - octave
+              - wxmaxima
               #drivers
               - printer-driver-cjet
               #build tools
