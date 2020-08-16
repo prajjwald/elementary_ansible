@@ -238,3 +238,8 @@
         npm:
           name: hacksalot/hackmyresume
           global: yes
+
+      - name: Install gitbook globally
+        npm:
+          name: gitbook-cli
+          global: yes
