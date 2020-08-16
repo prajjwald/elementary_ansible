@@ -136,6 +136,7 @@
               - code
               - spotify-client
               - freeplane
+              - calibre
               # Chess!!
               - stockfish
               - scid
