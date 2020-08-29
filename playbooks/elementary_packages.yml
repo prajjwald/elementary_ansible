@@ -215,8 +215,9 @@
 
       - name: Hide libvert-qemu user from login screen
         copy:
-            src:
+            src: "elementary/system/AccountServices/system-user"
             dest: "/var/lib/AccountsService/users/libvirt-qemu"
+
       - name: Install LXD from snap
         snap:
             name: lxd
