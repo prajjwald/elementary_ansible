@@ -128,6 +128,11 @@
               - graphviz-doc
               - xdot
               - diffuse
+              - qemu-kvm
+              - qemu
+              - virt-manager
+              - virt-viewer
+              - libvirt-bin
               #useful desktop tools
               - typora
               - atom
@@ -139,9 +144,10 @@
               - calibre
               # Chess!!
               - stockfish
-              - scid
               - toga2
               - phalanx
+              - pychess
+              - scid
               # elementary OS apps
               - com.github.alainm23.planner
               - com.github.babluboy.bookworm
@@ -207,6 +213,10 @@
               # but there are known issues with multi-monitor setups.  Redshift-gtk works perfectly however.
               - redshift-gtk
 
+      - name: Hide libvert-qemu user from login screen
+        copy:
+            src:
+            dest: "/var/lib/AccountsService/users/libvirt-qemu"
       - name: Install LXD from snap
         snap:
             name: lxd
