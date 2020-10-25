@@ -103,6 +103,18 @@
             state: present
             filename: spotify
 
+      - name: Add Insync Key From Ubuntu Keyserver
+        apt_key:
+            keyserver: keyserver.ubuntu.com
+            id: ACCAF35C
+
+      - name: Insync Repository
+        apt_repository:
+            repo: "deb http://apt.insync.io/ubuntu bionic non-free contrib"
+            state: present
+            filename: insync
+
+
       - name: Install freeoffice from deb
         apt:
             deb: https://www.freeoffice.com/download.php?filename=https://www.softmaker.net/down/softmaker-freeoffice-2018_976-01_amd64.deb
@@ -221,6 +233,7 @@
               # I'd love to stick to the default night-light settings only
               # but there are known issues with multi-monitor setups.  Redshift-gtk works perfectly however.
               - redshift-gtk
+              - insync
 
       - name: Hide libvert-qemu user from login screen
         copy:
