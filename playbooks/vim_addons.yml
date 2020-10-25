@@ -1,0 +1,45 @@
+---
+- name: VSCode plugins installation for user
+  gather_facts: true
+  hosts: all
+  become: no
+  vars:
+      vim_extensions_path: "$HOME/.vim/pack/packages/start"
+      vim_extensions:
+              "completor":
+                  repo: "https://github.com/maralla/completor.vim.git"
+              "leetcode":
+                  repo: "https://github.com/ianding1/leetcode.vim.git"
+              "ultisnips":
+                  repo: "https://github.com/SirVer/ultisnips.git"
+              "vim-colorschemes":
+                  repo: "https://github.com/flazz/vim-colorschemes.git"
+
+      python3_dependencies: [
+          "keyring",
+          "browser-cookie3",
+          "keyrings.alt"
+      ]
+
+  tasks:
+      - name: "Create vim plugin directory if needed"
+        file:
+            path: "{{ vim_extensions_path }}"
+            state: directory
+            mode: "u=rwx,g=rx,o=rx"
+
+      - name: "Install vim Extensions"
+        git:
+            repo: "{{ item.value.repo }}"
+            dest: "{{ vim_extensions_path }}/{{ item.key }}"
+        loop: "{{ lookup('dict', vim_extensions) }}"
+
+      - name: "Install python dependencies for extensions using pip3"
+        pip:
+            name: "{{ python3_dependencies }}"
+            executable: pip3
+
+      - name: Copy Sample vimrc
+        copy:
+            src: "files/vim/vimrc.sample"
+            dest: "$HOME/vimrc.sample"

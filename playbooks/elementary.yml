@@ -8,4 +8,5 @@
 - import_playbook: elementary_packages.yml
 - import_playbook: elementary_desktop_config.yml
 - import_playbook: nepali_fonts.yml
+- import_playbook: vim_addons.yml
 - import_playbook: vscode_addons.yml

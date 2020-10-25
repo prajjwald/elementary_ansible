@@ -6,9 +6,12 @@
   vars:
       vscode_extensions_list: [
           "DavidAnson.vscode-markdownlint",
+          "formulahendry.code-runner",
           "go2sh.cmake-integration-vscode",
           "golang.go",
           "inu1255.easy-snippet",
+          "jebbs.plantuml",
+          "LeetCode.vscode-leetcode",
           "ms-azuretools.vscode-docker",
           "ms-python.python",
           "ms-python.vscode-pylance",
@@ -23,8 +26,9 @@
           "VisualStudioExptTeam.vscodeintellicode",
           "vscodevim.vim",
           "vscoss.vscode-ansible",
+          "wangtao0101.debug-leetcode",
           "xaver.clang-format",
-          "jebbs.plantuml"
+          "XavierCai.vscode-leetcode-cpp-debug"
           ]
 
   tasks:

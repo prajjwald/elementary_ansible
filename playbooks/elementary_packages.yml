@@ -45,6 +45,12 @@
             state: present
             filename: nextcloud
 
+      - name: Jonathon F's PPA for latest vim
+        apt_repository:
+            repo: "ppa:jonathonf/vim"
+            state: present
+            filename: jonathonf
+
       - name: Brave Key
         apt_key:
             url: https://brave-browser-apt-release.s3.brave.com/brave-core.asc
@@ -203,7 +209,10 @@
               # Other
               - dconf-editor
               - unattended-upgrades
-              - vim-gtk
+              # using the default PPA - I use vim-gtk.
+              # However, with ppa:jonathonf - vim-gtk3 and vim-nox are needed for newest features.
+              - vim-gtk3
+              - vim-nox
               - screen
               - python
               - git
