@@ -151,6 +151,9 @@
               - virt-manager
               - virt-viewer
               - libvirt-bin
+              - imagemagick
+              - imagemagick-common
+              - imagemagick-doc
               #useful desktop tools
               - typora
               - atom
