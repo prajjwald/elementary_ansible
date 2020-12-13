@@ -11,6 +11,9 @@ sudo apt-add-repository -yu ppa:ansible/ansible
 sudo apt-get install -y ansible python-psutil
 sudo apt-get -y upgrade
 
+#Install flatpak community.general module
+sudo ansible-galaxy collection install community.general
+
 echo "Running ansible"
 #no need for the -K option, as we just sudo'd twice
 ansible-playbook -i localhost, -c local -b playbooks/elementary.yml

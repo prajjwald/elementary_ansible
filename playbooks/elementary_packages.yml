@@ -19,19 +19,18 @@
       - name: Docker Repository
         apt_repository:
             repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
-            state: present
             filename: docker
 
-      - name: Typora Key
-        apt_key:
-            url: https://typora.io/linux/public-key.asc
-            state: present
+#      - name: Typora Key (deprecated -  now using flatpak)
+#        apt_key:
+#            url: https://typora.io/linux/public-key.asc
+            state: absent
 
-      - name: Typora Repository
+      - name: Typora Repository (deprecated -  now using flatpak)
         apt_repository:
             repo: 'deb https://typora.io/linux ./'
-            state: present
-            filename: docker
+            state: absent
+            filename: typora 
 
       - name: Ansible PPA
         apt_repository:
@@ -39,10 +38,10 @@
             state: present
             filename: ansible
 
-      - name: Nextcloud PPA
+      - name: Nextcloud PPA (deprecated -  now using flatpak)
         apt_repository:
             repo: ppa:nextcloud-devs/client
-            state: present
+            state: absent
             filename: nextcloud
 
       - name: Jonathon F's PPA for latest vim
@@ -62,15 +61,15 @@
             state: present
             filename: brave
 
-      - name: Atom Key
-        apt_key:
-            url: https://packagecloud.io/AtomEditor/atom/gpgkey
-            state: present
+#      - name: Atom Key (deprecated -  now using flatpak)
+#        apt_key:
+#            url: https://packagecloud.io/AtomEditor/atom/gpgkey
+#            state: absent
 
-      - name: Atom Repository
+      - name: Atom Repository (deprecated -  now using flatpak)
         apt_repository:
             repo: "deb [arch=amd64] https://packagecloud.io/AtomEditor/atom/any/ any main"
-            state: present
+            state: absent
             filename: atom
             update_cache: yes
 
@@ -92,15 +91,15 @@
             state: present
             filename: vscode
 
-      - name: Spotify Key
-        apt_key:
-            url: https://download.spotify.com/debian/pubkey.gpg
-            state: present
+#      - name: Spotify Key (deprecated -  now using flatpak)
+#        apt_key:
+#            url: https://download.spotify.com/debian/pubkey.gpg
+#            state: absent
 
-      - name: Spotify
+      - name: Spotify (deprecated -  now using flatpak)
         apt_repository:
             repo: "deb http://repository.spotify.com stable non-free"
-            state: present
+            state: absent
             filename: spotify
 
       - name: Add Insync Key From Ubuntu Keyserver
@@ -126,6 +125,27 @@
         apt:
             update_cache: yes
             upgrade: yes
+
+      - name: Remove deprecated packags (migrate them to flatpak to avoid adding new repositories)
+        apt:
+          pkg:
+              - spotify-client
+              - typora
+              - nextcloud-client
+              - dropbox
+              - atom
+              - viber
+          state: absent
+
+      - name: Remove Zoom from snap (deprecated -  now using flatpak)
+        snap:
+            name: zoom-client
+            state: absent
+
+      - name: Remove draw.io from snap (deprecated -  now using flatpak)
+        snap:
+            name: drawio
+            state: absent
 
       - name: Install Packages
         apt:
@@ -155,12 +175,8 @@
               - imagemagick-common
               - imagemagick-doc
               #useful desktop tools
-              - typora
-              - atom
-              - nextcloud-client
               - brave-browser
               - code
-              - spotify-client
               - freeplane
               - calibre
               # Chess!!
@@ -243,6 +259,68 @@
             src: "elementary/system/AccountServices/system-user"
             dest: "/var/lib/AccountsService/users/libvirt-qemu"
 
+#flatpak candidates:
+#dropbox, viber, zoom, draw.io, wpsoffice
+
+############################ Flatpak installations ############################ 
+
+#First - add flathub repository if not yet present
+      - name: Add the flathub flatpak repository remote to the user installation
+        flatpak_remote:
+          name: flathub
+          state: present
+          flatpakrepo_url: https://dl.flathub.org/repo/flathub.flatpakrepo
+
+      - name: Install Zoom from flatpak
+        community.general.flatpak:
+          name: us.zoom.Zoom
+          state: present
+
+      - name: Install draw.io from flatpak
+        community.general.flatpak:
+          name: com.jgraph.drawio.desktop
+          state: present
+
+      - name: Install Viber from flatpak
+        community.general.flatpak:
+          name: com.viber.Viber
+          state: present
+
+      - name: Install Dropbox from flatpak
+        community.general.flatpak:
+          name: com.dropbox.Client
+          state: present
+
+      - name: Install Typora from flatpak
+        community.general.flatpak:
+          name: io.typora.Typora
+          state: present
+
+      - name: Install Mark Text from flatpak
+        community.general.flatpak:
+          name: com.github.marktext.marktext
+          state: present
+
+      - name: Install Spotify from flatpak
+        community.general.flatpak:
+          name: com.spotify.Client
+          state: present
+
+      - name: Install Atom from flatpak
+        community.general.flatpak:
+          name: io.atom.Atom
+          state: present
+
+      - name: Install WPS Office from flatpak
+        community.general.flatpak:
+          name: com.wps.Office
+          state: present
+
+
+############################ End Flatpak installations ############################ 
+
+############################ Snap installations ############################ 
+
       - name: Install LXD from snap
         snap:
             name: lxd
@@ -255,22 +333,9 @@
         snap:
             name: caprine
 
-      - name: Install Zoom from snap
-        snap:
-            name: zoom-client
+############################ End Snap installations ############################ 
 
-      - name: Install draw.io from snap
-        snap:
-          name: drawio
-
-      - name: Install Viber from deb
-        apt:
-          deb: https://download.cdn.viber.com/cdn/desktop/Linux/viber.deb
-
-      - name: Install Dropbox from deb
-        apt:
-            deb: https://www.dropbox.com/download?dl=packages/ubuntu/dropbox_2020.03.04_amd64.deb
-
+############################ NPM installations ############################ 
       - name: Install hackmyresume globally
         npm:
           name: hacksalot/hackmyresume
@@ -280,3 +345,4 @@
         npm:
           name: gitbook-cli
           global: yes
+############################ End NPM installations ############################ 
