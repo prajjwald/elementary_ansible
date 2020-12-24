@@ -176,6 +176,7 @@
               - imagemagick-doc
               #useful desktop tools
               - brave-browser
+              - qutebrowser
               - code
               - freeplane
               - calibre
