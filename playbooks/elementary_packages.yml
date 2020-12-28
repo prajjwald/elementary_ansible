@@ -322,6 +322,10 @@
           name: com.meetfranz.Franz
           state: present
 
+      - name: Install Pycharm Community from flatpak
+        community.general.flatpak:
+          name: com.jetbrains.PyCharm-Community
+          state: present
 
 ############################ End Flatpak installations ############################ 
 
