@@ -316,6 +316,11 @@
           name: com.wps.Office
           state: present
 
+      - name: Install Franz messaging app from flatpak
+        community.general.flatpak:
+          name: com.meetfranz.Franz
+          state: present
+
 
 ############################ End Flatpak installations ############################ 
 
