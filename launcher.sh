@@ -21,8 +21,10 @@ else
     echo "Installing ..."
     curl https://bootstrap.pypa.io/get-pip.py -o /tmp/get-pip.py
     sudo python3 /tmp/get-pip.py
-    sudo python3 -m pip install ansible
 fi
+
+#Install/upgrade ansible from pip
+sudo python3 -m pip install ansible
 
 #Install flatpak community.general module
 sudo ansible-galaxy collection install community.general
