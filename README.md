@@ -9,7 +9,9 @@ wget -c https://raw.githubusercontent.com/prajjwald/elementary_ansible/master/qu
 chmod +x quickstart.sh && ./quickstart.sh
 ```
 
-
+<details>
+  <summary>Click to expand for more details (you probably don't need this)</summary>
+  
 ## Quick Start for Normal Users
 
 ```bash
@@ -109,3 +111,4 @@ The repository can be broken down roughly as:
   - Development + Virtualization + Power Tools
   - Desktop (Re)Configuration
   - VSCode addons installation
+</details>
