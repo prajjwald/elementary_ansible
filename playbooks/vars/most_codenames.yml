@@ -1,0 +1,5 @@
+---
+ubuntu_codename: "{{ansible_lsb.codename}}"
+release_packages:
+#keep screen as the default till I clean this up
+  - screen

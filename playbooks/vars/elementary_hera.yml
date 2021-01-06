@@ -1,0 +1,7 @@
+---
+ubuntu_codename: 'bionic'
+release_packages:
+  - diffuse
+  - steam
+  - libvirt-bin
+  - valkyrie

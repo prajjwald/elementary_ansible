@@ -1,0 +1,4 @@
+---
+ubuntu_codename: 'focal'
+release_packages:
+  - steam-installer

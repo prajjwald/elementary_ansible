@@ -3,12 +3,24 @@
   gather_facts: true
   user: root
   hosts: all
+  vars_files:
+    - [ "vars/{{ ansible_lsb.id }}_defaults.yml", "vars/ubuntu_defaults.yml" ]
+    - [ "vars/{{ ansible_lsb.id }}_{{ansible_lsb.codename}}.yml", "vars/most_codenames.yml" ]
 
   tasks:
 
+# Deprecate ansible ppa in favor of pip installation
+# The reason being - we need some of the newer modules, but the ppa is not available
+# for the latest ubuntu versions (20+) yet
+      - name: Ansible PPA
+        apt_repository:
+            repo: ppa:ansible/ansible
+            state: absent
+            filename: ansible
+
       - name: Ubuntu Universe PPA
         apt_repository:
-            repo: "deb http://archive.ubuntu.com/ubuntu bionic universe"
+            repo: "deb http://archive.ubuntu.com/ubuntu {{ubuntu_codename}} universe"
             state: present
 
       - name: Docker Key
@@ -18,31 +30,9 @@
 
       - name: Docker Repository
         apt_repository:
-            repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
+            repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ubuntu_codename}} stable"
             filename: docker
-
-#      - name: Typora Key (deprecated -  now using flatpak)
-#        apt_key:
-#            url: https://typora.io/linux/public-key.asc
-            state: absent
-
-      - name: Typora Repository (deprecated -  now using flatpak)
-        apt_repository:
-            repo: 'deb https://typora.io/linux ./'
-            state: absent
-            filename: typora 
-
-      - name: Ansible PPA
-        apt_repository:
-            repo: ppa:ansible/ansible
             state: present
-            filename: ansible
-
-      - name: Nextcloud PPA (deprecated -  now using flatpak)
-        apt_repository:
-            repo: ppa:nextcloud-devs/client
-            state: absent
-            filename: nextcloud
 
       - name: Jonathon F's PPA for latest vim
         apt_repository:
@@ -60,18 +50,6 @@
             repo: "deb [arch=amd64] https://brave-browser-apt-release.s3.brave.com/ stable main"
             state: present
             filename: brave
-
-#      - name: Atom Key (deprecated -  now using flatpak)
-#        apt_key:
-#            url: https://packagecloud.io/AtomEditor/atom/gpgkey
-#            state: absent
-
-      - name: Atom Repository (deprecated -  now using flatpak)
-        apt_repository:
-            repo: "deb [arch=amd64] https://packagecloud.io/AtomEditor/atom/any/ any main"
-            state: absent
-            filename: atom
-            update_cache: yes
 
       - name: VSCode Key
         apt_key:
@@ -91,17 +69,6 @@
             state: present
             filename: vscode
 
-#      - name: Spotify Key (deprecated -  now using flatpak)
-#        apt_key:
-#            url: https://download.spotify.com/debian/pubkey.gpg
-#            state: absent
-
-      - name: Spotify (deprecated -  now using flatpak)
-        apt_repository:
-            repo: "deb http://repository.spotify.com stable non-free"
-            state: absent
-            filename: spotify
-
       - name: Add Insync Key From Ubuntu Keyserver
         apt_key:
             keyserver: keyserver.ubuntu.com
@@ -109,24 +76,31 @@
 
       - name: Insync Repository
         apt_repository:
-            repo: "deb http://apt.insync.io/ubuntu bionic non-free contrib"
+            repo: "deb http://apt.insync.io/ubuntu {{ubuntu_codename}} non-free contrib"
             state: present
             filename: insync
 
+      - name: Check if my_package is installed
+        command: dpkg-query -W softmaker-freeoffice-2018
+        register: freeoffice2018_check_deb
+        failed_when: freeoffice2018_check_deb.rc > 1
+        changed_when: freeoffice2018_check_deb.rc == 1
 
       - name: Install freeoffice from deb
         apt:
             deb: https://www.freeoffice.com/download.php?filename=https://www.softmaker.net/down/softmaker-freeoffice-2018_976-01_amd64.deb
+        when: freeoffice2018_check_deb.rc == 1
 
       - name: Add freeoffice repository using script in installed deb
         command: /usr/share/freeoffice2018/add_apt_repo.sh
+        when: freeoffice2018_check_deb.rc == 1
 
-      - name: Upgrade Packages (including ansible)
+      - name: Upgrade Packages
         apt:
-            update_cache: yes
-            upgrade: yes
+            update_cache: 'True'
+            upgrade: 'True'
 
-      - name: Remove deprecated packags (migrate them to flatpak to avoid adding new repositories)
+      - name: Remove deprecated packages (migrate them to flatpak/pip to avoid adding new repositories)
         apt:
           pkg:
               - spotify-client
@@ -135,6 +109,7 @@
               - dropbox
               - atom
               - viber
+              - ansible
           state: absent
 
       - name: Remove Zoom from snap (deprecated -  now using flatpak)
@@ -147,12 +122,17 @@
             name: drawio
             state: absent
 
-      - name: Install Packages
+      - name: Install list of packages (newer method)
+        apt: 
+          name: "{{ distro_packages + release_packages }}"
+          state: present
+
+      - name: Install Packages (legacy method)
         apt:
           pkg:
             #powertools
               - ansible
-              - python-psutil
+              - python3-psutil
               - snapd
               - pass
               - encfs
@@ -165,12 +145,10 @@
               - graphviz
               - graphviz-doc
               - xdot
-              - diffuse
               - qemu-kvm
               - qemu
               - virt-manager
               - virt-viewer
-              - libvirt-bin
               - imagemagick
               - imagemagick-common
               - imagemagick-doc
@@ -187,14 +165,6 @@
               - phalanx
               - pychess
               - scid
-              # elementary OS apps
-              - com.github.alainm23.planner
-              - com.github.babluboy.bookworm
-              - com.github.lainsce.palaura
-              - com.github.dr-styki.screenrec
-              - com.github.lainsce.notejot
-              - com.github.calo001.fondo
-              - com.github.mdh34.hackup
               # Mathematics
               - octave
               - wxmaxima
@@ -218,7 +188,6 @@
               - exuberant-ctags
               - autoconf
               - golang-go
-              - valkyrie
               - google-mock
               - googletest
               - sqlite3
@@ -237,8 +206,6 @@
               - firefox-locale-ne
               - typecatcher
               - pandoc
-              # Games
-              - steam
               # Other
               - dconf-editor
               - unattended-upgrades

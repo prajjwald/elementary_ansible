@@ -1,0 +1,7 @@
+--- 
+distro_packages:
+#Budgie is a great desktop environment for stock ubuntu
+#and comes with a mac like environment
+#plank is also used in elementary, just explicitly installing in stock ubuntu
+  - ubuntu-budgie-desktop
+  - plank

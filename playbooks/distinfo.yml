@@ -1,0 +1,17 @@
+- hosts: localhost
+  gather_facts: yes
+  become: true
+  vars_files:
+    - [ "vars/{{ ansible_lsb.id }}_defaults.yml", "vars/ubuntu_defaults.yml" ]
+    - [ "vars/{{ ansible_lsb.id }}_{{ansible_lsb.codename}}.yml", "vars/most_codenames.yml" ]
+
+  tasks:
+  - name: System details
+    debug: msg="{{ item }}"
+    with_items: 
+    - "{{ ansible_distribution }}"
+    - "{{ ansible_distribution_version }}"
+    - "{{ ansible_distribution_major_version }}"
+
+  - debug: msg="My release is {{ansible_lsb.id}} {{ansible_lsb.codename}}"
+  - debug: msg="My ubuntu release codename is {{ubuntu_codename}} {{test_items|flatten(levels=1)}}"
