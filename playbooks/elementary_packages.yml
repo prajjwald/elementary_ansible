@@ -8,7 +8,6 @@
     - [ "vars/{{ ansible_lsb.id }}_{{ansible_lsb.codename}}.yml", "vars/most_codenames.yml" ]
 
   tasks:
-
 # Deprecate ansible ppa in favor of pip installation
 # The reason being - we need some of the newer modules, but the ppa is not available
 # for the latest ubuntu versions (20+) yet
@@ -134,9 +133,12 @@
               - ansible
               - python3-psutil
               - snapd
+              - aptitude
+              - flatpak
               - pass
               - encfs
               - cryfs
+              - xdiskusage
               - docker-ce
               - docker-ce-cli
               - docker-compose
