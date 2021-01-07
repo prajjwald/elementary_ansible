@@ -23,6 +23,9 @@ else
     sudo python3 /tmp/get-pip.py
 fi
 
+#upgrade/install pip
+pip install --upgrade pip
+
 #Install/upgrade ansible from pip
 sudo python3 -m pip install ansible
 
