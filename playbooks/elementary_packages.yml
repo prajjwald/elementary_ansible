@@ -327,3 +327,14 @@
           global: yes
 
 ############################ End NPM installations ############################ 
+#Now that we have finished installing software, add user to a few groups
+      - name: get the username running the deploy
+        become: false
+        local_action: command whoami
+        register: username_on_the_host
+
+      - name: "Add user {{username_on_the_host.stdout}} to groups lxd, docker"
+        user:
+          name: "{{username_on_the_host.stdout}}"
+          groups: lxd, docker
+          append: yes

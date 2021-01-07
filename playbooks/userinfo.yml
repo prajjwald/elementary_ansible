@@ -1,0 +1,17 @@
+---
+- hosts: localhost
+  gather_facts: yes
+  become: 'True'
+
+  tasks:
+  - name: get the username running the deploy
+    become: false
+    local_action: command whoami
+    register: username_on_the_host
+
+  - name: get the username running the deploy
+    become: true
+    local_action: command whoami
+    register: root_on_the_host
+
+  - debug: msg="Original user is {{ username_on_the_host.stdout }} Root user is {{ root_on_the_host.stdout }}"
