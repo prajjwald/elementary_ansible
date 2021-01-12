@@ -6,16 +6,31 @@
   vars_files:
     - [ "vars/{{ ansible_lsb.id }}_defaults.yml", "vars/ubuntu_defaults.yml" ]
     - [ "vars/{{ ansible_lsb.id }}_{{ansible_lsb.codename}}.yml", "vars/most_codenames.yml" ]
+  vars:
+      snap_packages: 
+          - lxd
+          - mailspring
+          - caprine
+          - superproductivity
+
+      flatpak_packages:
+          - us.zoom.Zoom
+          - com.jgraph.drawio.desktop
+          - com.viber.Viber
+          - com.dropbox.Client
+          - io.typora.Typora
+          - com.github.marktext.marktext
+          - com.spotify.Client
+          - io.atom.Atom
+          - com.wps.Office
+          - com.meetfranz.Franz
+          - com.jetbrains.PyCharm-Community"
+
+      npm_packages:
+          - hacksalot/hackmyresume
+          - gitbook-cli
 
   tasks:
-# Deprecate ansible ppa in favor of pip installation
-# The reason being - we need some of the newer modules, but the ppa is not available
-# for the latest ubuntu versions (20+) yet
-      - name: Ansible PPA
-        apt_repository:
-            repo: ppa:ansible/ansible
-            state: absent
-            filename: ansible
 
       - name: Ubuntu Universe PPA
         apt_repository:
@@ -98,28 +113,6 @@
         apt:
             update_cache: 'True'
             upgrade: 'True'
-
-      - name: Remove deprecated packages (migrate them to flatpak/pip to avoid adding new repositories)
-        apt:
-          pkg:
-              - spotify-client
-              - typora
-              - nextcloud-client
-              - dropbox
-              - atom
-              - viber
-              - ansible
-          state: absent
-
-      - name: Remove Zoom from snap (deprecated -  now using flatpak)
-        snap:
-            name: zoom-client
-            state: absent
-
-      - name: Remove draw.io from snap (deprecated -  now using flatpak)
-        snap:
-            name: drawio
-            state: absent
 
       - name: Install list of packages (newer method)
         apt: 
@@ -242,89 +235,25 @@
           state: present
           flatpakrepo_url: https://dl.flathub.org/repo/flathub.flatpakrepo
 
-      - name: Install Zoom from flatpak
+      - name: "Install flatpak packages: {{ flatpak_packages }}"
         community.general.flatpak:
-          name: us.zoom.Zoom
-          state: present
-
-      - name: Install draw.io from flatpak
-        community.general.flatpak:
-          name: com.jgraph.drawio.desktop
-          state: present
-
-      - name: Install Viber from flatpak
-        community.general.flatpak:
-          name: com.viber.Viber
-          state: present
-
-      - name: Install Dropbox from flatpak
-        community.general.flatpak:
-          name: com.dropbox.Client
-          state: present
-
-      - name: Install Typora from flatpak
-        community.general.flatpak:
-          name: io.typora.Typora
-          state: present
-
-      - name: Install Mark Text from flatpak
-        community.general.flatpak:
-          name: com.github.marktext.marktext
-          state: present
-
-      - name: Install Spotify from flatpak
-        community.general.flatpak:
-          name: com.spotify.Client
-          state: present
-
-      - name: Install Atom from flatpak
-        community.general.flatpak:
-          name: io.atom.Atom
-          state: present
-
-      - name: Install WPS Office from flatpak
-        community.general.flatpak:
-          name: com.wps.Office
-          state: present
-
-      - name: Install Franz messaging app from flatpak
-        community.general.flatpak:
-          name: com.meetfranz.Franz
-          state: present
-
-      - name: Install Pycharm Community from flatpak
-        community.general.flatpak:
-          name: com.jetbrains.PyCharm-Community
-          state: present
+            name: "{{ item }}"
+            state: present
+        loop: "{{ flatpak_packages }}"
 
 ############################ End Flatpak installations ############################ 
 
-############################ Snap installations ############################ 
-
-      - name: Install LXD from snap
+      - name: "Install snap packages: {{ snap_packages }}"
         snap:
-            name: lxd
+            name: "{{ item }}"
+            state: present
+        loop: "{{ snap_packages }}"
 
-      - name: Install Mailspring from snap
-        snap:
-            name: mailspring
-
-      - name: Install Caprine from snap
-        snap:
-            name: caprine
-
-############################ End Snap installations ############################ 
-
-############################ NPM installations ############################ 
-      - name: Install hackmyresume globally
+      - name: "Install npm packages: {{ npm_packages }}"
         npm:
-          name: hacksalot/hackmyresume
-          global: yes
-
-      - name: Install gitbook globally
-        npm:
-          name: gitbook-cli
-          global: yes
+            name: "{{ item }}"
+            global: yes
+        loop: "{{ npm_packages }}"
 
 ############################ End NPM installations ############################ 
 #Now that we have finished installing software, add user to a few groups
