@@ -1,0 +1,20 @@
+---
+- hosts: localhost
+  gather_facts: yes
+  vars:
+    fruits:
+      - apple
+      - orange
+
+    empty: []
+
+    colors:
+      - orange
+      - purple
+
+    combined: "{{ fruits|union(empty)|union(colors) }}"
+
+  tasks:
+  - debug: msg="Entry is {{ item }}"
+    #loop: "{{ fruits }}"
+    loop: "{{ combined }}"
