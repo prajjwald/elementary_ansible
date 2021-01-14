@@ -13,7 +13,7 @@
           - caprine
           - superproductivity
 
-      flatpak_packages:
+      common_flatpak_packages:
           - us.zoom.Zoom
           - com.jgraph.drawio.desktop
           - com.viber.Viber
@@ -26,6 +26,7 @@
           - com.meetfranz.Franz
           - com.jetbrains.PyCharm-Community"
 
+      flatpak_packages: "{{ common_flatpak_packages|union(distro_flatpaks) }}"
       npm_packages:
           - hacksalot/hackmyresume
           - gitbook-cli

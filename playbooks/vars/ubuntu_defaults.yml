@@ -5,3 +5,10 @@ distro_packages:
 #plank is also used in elementary, just explicitly installing in stock ubuntu
   - ubuntu-budgie-desktop
   - plank
+
+distro_flatpaks:
+  - com.github.alainm23.planner
+  - com.github.babluboy.bookworm
+  - com.github.lainsce.notejot
+  - com.github.calo001.fondo
+  - com.github.mdh34.hackup
