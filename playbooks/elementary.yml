@@ -5,8 +5,12 @@
   gather_facts: true
 
   tasks:
-- import_playbook: elementary_packages.yml
+#- import_playbook: elementary_packages.yml
 - import_playbook: elementary_desktop_config.yml
+  when: packages_only == "False"
 - import_playbook: nepali_fonts.yml
+  when: packages_only == "False"
 - import_playbook: vim_addons.yml
+  when: packages_only == "False"
 - import_playbook: vscode_addons.yml
+  when: packages_only == "False"

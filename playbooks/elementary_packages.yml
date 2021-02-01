@@ -4,267 +4,196 @@
   user: root
   hosts: all
   vars_files:
-    - [ "vars/{{ ansible_lsb.id }}_defaults.yml", "vars/ubuntu_defaults.yml" ]
-    - [ "vars/{{ ansible_lsb.id }}_{{ansible_lsb.codename}}.yml", "vars/most_codenames.yml" ]
+    - ["vars/{{ ansible_lsb.id }}_defaults.yml", "vars/ubuntu_defaults.yml"]
+    - [
+        "vars/{{ ansible_lsb.id }}_{{ansible_lsb.codename}}.yml",
+        "vars/most_codenames.yml",
+      ]
   vars:
-      snap_packages: 
-          - lxd
-          - mailspring
-          - caprine
-          - superproductivity
+    # You can override install mode from command line
+    # with -e "mode=<mode>" [all|dev|basic]
+    install_mode: "basic"
+    package_categories:
+      - basic # always installed
+      - development # dev/all
+      - extras # all
+      - games # always installed
+      - nepali # always installed
+      - virtualization # all
 
-      common_flatpak_packages:
-          - us.zoom.Zoom
-          - com.jgraph.drawio.desktop
-          - com.viber.Viber
-          - com.dropbox.Client
-          - io.typora.Typora
-          - com.github.marktext.marktext
-          - com.spotify.Client
-          - io.atom.Atom
-          - com.wps.Office
-          - com.meetfranz.Franz
-          - com.jetbrains.PyCharm-Community"
+    snap_packages:
+      - lxd
+      - mailspring
+      - caprine
+      - superproductivity
 
-      flatpak_packages: "{{ common_flatpak_packages|union(distro_flatpaks) }}"
-      npm_packages:
-          - hacksalot/hackmyresume
-          - gitbook-cli
+    common_flatpak_packages:
+      - us.zoom.Zoom
+      - com.jgraph.drawio.desktop
+      - com.viber.Viber
+      - com.dropbox.Client
+      - io.typora.Typora
+      - com.github.marktext.marktext
+      - com.spotify.Client
+      - io.atom.Atom
+      - com.wps.Office
+      - com.meetfranz.Franz
+      - com.jetbrains.PyCharm-Community"
+
+    flatpak_packages: "{{ common_flatpak_packages|union(distro_flatpaks) }}"
+    npm_packages:
+      - hacksalot/hackmyresume
+      - gitbook-cli
 
   tasks:
+    # Include package categories
+    - include_vars:
+        file: "packages/{{ item }}.yml"
+      loop: "{{ package_categories }}"
 
-      - name: Ubuntu Universe PPA
-        apt_repository:
-            repo: "deb http://archive.ubuntu.com/ubuntu {{ubuntu_codename}} universe"
-            state: present
+    - name: Ubuntu Universe PPA
+      apt_repository:
+        repo: "deb http://archive.ubuntu.com/ubuntu {{ubuntu_codename}} universe"
+        state: present
 
-      - name: Docker Key
-        apt_key:
-            url: https://download.docker.com/linux/ubuntu/gpg
-            state: present
+    - name: Docker Key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
 
-      - name: Docker Repository
-        apt_repository:
-            repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ubuntu_codename}} stable"
-            filename: docker
-            state: present
+    - name: Docker Repository
+      apt_repository:
+        repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ubuntu_codename}} stable"
+        filename: docker
+        state: present
 
-      - name: Jonathon F's PPA for latest vim
-        apt_repository:
-            repo: "ppa:jonathonf/vim"
-            state: present
-            filename: jonathonf
+    - name: Jonathon F's PPA for latest vim
+      apt_repository:
+        repo: "ppa:jonathonf/vim"
+        state: present
+        filename: jonathonf
 
-      - name: Brave Key
-        apt_key:
-            url: https://brave-browser-apt-release.s3.brave.com/brave-core.asc
-            state: present
+    - name: Brave Key
+      apt_key:
+        url: https://brave-browser-apt-release.s3.brave.com/brave-core.asc
+        state: present
 
-      - name: Brave Repository
-        apt_repository:
-            repo: "deb [arch=amd64] https://brave-browser-apt-release.s3.brave.com/ stable main"
-            state: present
-            filename: brave
+    - name: Brave Repository
+      apt_repository:
+        repo: "deb [arch=amd64] https://brave-browser-apt-release.s3.brave.com/ stable main"
+        state: present
+        filename: brave
 
-      - name: VSCode Key
-        apt_key:
-            url: https://packages.microsoft.com/keys/microsoft.asc
-            state: present
+    - name: VSCode Key
+      apt_key:
+        url: https://packages.microsoft.com/keys/microsoft.asc
+        state: present
 
-      - name: VSCode Trusted GPG Key
-        shell: |
-            curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > packages.microsoft.gpg
-            install -o root -g root -m 644 packages.microsoft.gpg /etc/apt/trusted.gpg.d/
-        args:
-            warn: false # turn warning off, since curl is part of a pipe here
+    - name: VSCode Trusted GPG Key
+      shell: |
+        curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > packages.microsoft.gpg
+        install -o root -g root -m 644 packages.microsoft.gpg /etc/apt/trusted.gpg.d/
+      args:
+        warn: false # turn warning off, since curl is part of a pipe here
 
-      - name: VSCode Repository
-        apt_repository:
-            repo: "deb [arch=amd64 signed-by=/etc/apt/trusted.gpg.d/packages.microsoft.gpg] https://packages.microsoft.com/repos/vscode stable main"
-            state: present
-            filename: vscode
+    - name: VSCode Repository
+      apt_repository:
+        repo: "deb [arch=amd64 signed-by=/etc/apt/trusted.gpg.d/packages.microsoft.gpg] https://packages.microsoft.com/repos/vscode stable main"
+        state: present
+        filename: vscode
 
-      - name: Add Insync Key From Ubuntu Keyserver
-        apt_key:
-            keyserver: keyserver.ubuntu.com
-            id: ACCAF35C
+    - name: Add Insync Key From Ubuntu Keyserver
+      apt_key:
+        keyserver: keyserver.ubuntu.com
+        id: ACCAF35C
 
-      - name: Insync Repository
-        apt_repository:
-            repo: "deb http://apt.insync.io/ubuntu {{ubuntu_codename}} non-free contrib"
-            state: present
-            filename: insync
+    - name: Insync Repository
+      apt_repository:
+        repo: "deb http://apt.insync.io/ubuntu {{ubuntu_codename}} non-free contrib"
+        state: present
+        filename: insync
 
-      - name: Check if my_package is installed
-        command: dpkg-query -W softmaker-freeoffice-2018
-        register: freeoffice2018_check_deb
-        failed_when: freeoffice2018_check_deb.rc > 1
-        changed_when: freeoffice2018_check_deb.rc == 1
+    - name: Check if my_package is installed
+      command: dpkg-query -W softmaker-freeoffice-2018
+      register: freeoffice2018_check_deb
+      failed_when: freeoffice2018_check_deb.rc > 1
+      changed_when: freeoffice2018_check_deb.rc == 1
 
-      - name: Install freeoffice from deb
-        apt:
-            deb: https://www.freeoffice.com/download.php?filename=https://www.softmaker.net/down/softmaker-freeoffice-2018_976-01_amd64.deb
-        when: freeoffice2018_check_deb.rc == 1
+    - name: Install freeoffice from deb
+      apt:
+        deb: https://www.freeoffice.com/download.php?filename=https://www.softmaker.net/down/softmaker-freeoffice-2018_976-01_amd64.deb
+      when: freeoffice2018_check_deb.rc == 1
 
-      - name: Add freeoffice repository using script in installed deb
-        command: /usr/share/freeoffice2018/add_apt_repo.sh
-        when: freeoffice2018_check_deb.rc == 1
+    - name: Add freeoffice repository using script in installed deb
+      command: /usr/share/freeoffice2018/add_apt_repo.sh
+      when: freeoffice2018_check_deb.rc == 1
 
-      - name: Upgrade Packages
-        apt:
-            update_cache: 'True'
-            upgrade: 'True'
+    - name: Upgrade Packages
+      apt:
+        update_cache: "True"
+        upgrade: "True"
 
-      - name: Install list of packages (newer method)
-        apt: 
-          name: "{{ distro_packages + release_packages }}"
-          state: present
+    - name: Install basic packages
+      apt:
+        name: "{{ distro_packages + release_packages + basic_packages + games_packages + nepali_packages }}"
+        state: present
 
-      - name: Install Packages (legacy method)
-        apt:
-          pkg:
-            #powertools
-              - ansible
-              - python3-psutil
-              - snapd
-              - aptitude
-              - flatpak
-              - pass
-              - encfs
-              - cryfs
-              - xdiskusage
-              - docker-ce
-              - docker-ce-cli
-              - docker-compose
-              - containerd.io
-              - net-tools
-              - graphviz
-              - graphviz-doc
-              - xdot
-              - qemu-kvm
-              - qemu
-              - virt-manager
-              - virt-viewer
-              - imagemagick
-              - imagemagick-common
-              - imagemagick-doc
-              - mc
-              #useful desktop tools
-              - brave-browser
-              - qutebrowser
-              - code
-              - freeplane
-              - calibre
-              # Chess!!
-              - stockfish
-              - toga2
-              - phalanx
-              - pychess
-              - scid
-              # Mathematics
-              - octave
-              - wxmaxima
-              #drivers
-              - printer-driver-cjet
-              #build tools
-              - build-essential
-              - cmake
-              - clang
-              - ninja-build
-              - gdb
-              - lldb-10
-              - llvm-10*
-              - make
-              - python3-pip
-              - pylint
-              - lastpass-cli
-              - cppcheck
-              - cppcheck-gui
-              - global
-              - exuberant-ctags
-              - autoconf
-              - golang-go
-              - google-mock
-              - googletest
-              - sqlite3
-              - sqlite3-doc
-              - sqlitebrowser
-              # dependencies for hackmyresume
-              - npm
-              - wkhtmltopdf
-              # Nepali fonts
-              - scim-tables-additional
-              - fonts-sil-annapurna
-              - fonts-lohit-deva-nepali
-              - fonts-samyak-deva
-              - fonts-lohit-deva
-              - fonts-deva-extra
-              - firefox-locale-ne
-              - typecatcher
-              - pandoc
-              # Other
-              - dconf-editor
-              - unattended-upgrades
-              # using the default PPA - I use vim-gtk.
-              # However, with ppa:jonathonf - vim-gtk3 and vim-nox are needed for newest features.
-              - vim-gtk3
-              - vim-nox
-              - screen
-              - python
-              - git
-              - gitk
-              - gpg
-              # I'd love to stick to the default night-light settings only
-              # but there are known issues with multi-monitor setups.  Redshift-gtk works perfectly however.
-              - redshift-gtk
-              - insync
+    - name: Install development packages
+      apt:
+        name: "{{ development_packages }}"
+        state: present
+      when: install_mode == "all" or install_mode == "dev"
 
-      - name: Hide libvert-qemu user from login screen
-        copy:
-            src: "elementary/system/AccountServices/system-user"
-            dest: "/var/lib/AccountsService/users/libvirt-qemu"
+    - name: Install virtualization packages and extras
+      apt:
+        name: "{{ development_packages + extras_packages }}"
+        state: present
+      when: install_mode == "all"
 
-#flatpak candidates:
-#dropbox, viber, zoom, draw.io, wpsoffice
+    - name: Hide libvert-qemu user from login screen
+      copy:
+        src: "elementary/system/AccountServices/system-user"
+        dest: "/var/lib/AccountsService/users/libvirt-qemu"
+      when: install_mode == "all"
 
-############################ Flatpak installations ############################ 
+    ############################ Flatpak installations ############################
 
-#First - add flathub repository if not yet present
-      - name: Add the flathub flatpak repository remote to the user installation
-        flatpak_remote:
-          name: flathub
-          state: present
-          flatpakrepo_url: https://dl.flathub.org/repo/flathub.flatpakrepo
+    #First - add flathub repository if not yet present
+    - name: Add the flathub flatpak repository remote to the user installation
+      flatpak_remote:
+        name: flathub
+        state: present
+        flatpakrepo_url: https://dl.flathub.org/repo/flathub.flatpakrepo
 
-      - name: "Install flatpak packages: {{ flatpak_packages }}"
-        community.general.flatpak:
-            name: "{{ item }}"
-            state: present
-        loop: "{{ flatpak_packages }}"
+    - name: "Install flatpak packages: {{ flatpak_packages }}"
+      community.general.flatpak:
+        name: "{{ item }}"
+        state: present
+      loop: "{{ flatpak_packages }}"
 
-############################ End Flatpak installations ############################ 
+    ############################ End Flatpak installations ############################
 
-      - name: "Install snap packages: {{ snap_packages }}"
-        snap:
-            name: "{{ item }}"
-            state: present
-        loop: "{{ snap_packages }}"
+    - name: "Install snap packages: {{ snap_packages }}"
+      snap:
+        name: "{{ item }}"
+        state: present
+      loop: "{{ snap_packages }}"
 
-      - name: "Install npm packages: {{ npm_packages }}"
-        npm:
-            name: "{{ item }}"
-            global: yes
-        loop: "{{ npm_packages }}"
+    - name: "Install npm packages: {{ npm_packages }}"
+      npm:
+        name: "{{ item }}"
+        global: yes
+      loop: "{{ npm_packages }}"
 
-############################ End NPM installations ############################ 
-#Now that we have finished installing software, add user to a few groups
-      - name: get the username running the deploy
-        become: false
-        local_action: command whoami
-        register: username_on_the_host
+    ############################ End NPM installations ############################
+    #Now that we have finished installing software, add user to a few groups
+    - name: get the username running the deploy
+      become: false
+      local_action: command whoami
+      register: username_on_the_host
 
-      - name: "Add user {{username_on_the_host.stdout}} to groups lxd, docker"
-        user:
-          name: "{{username_on_the_host.stdout}}"
-          groups: lxd, docker
-          append: yes
+    - name: "Add user {{username_on_the_host.stdout}} to groups lxd, docker"
+      user:
+        name: "{{username_on_the_host.stdout}}"
+        groups: lxd, docker
+        append: yes

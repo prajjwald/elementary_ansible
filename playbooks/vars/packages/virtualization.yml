@@ -1,0 +1,10 @@
+---
+virtualization_packages:
+  - docker-ce
+  - docker-ce-cli
+  - docker-compose
+  - containerd.io
+  - qemu-kvm
+  - qemu
+  - virt-manager
+  - virt-viewer

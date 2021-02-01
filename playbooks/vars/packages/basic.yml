@@ -1,0 +1,34 @@
+---
+basic_packages:
+  - snapd
+  - aptitude
+  - flatpak
+  - mc
+  - npm
+  - wkhtmltopdf
+  - dconf-editor
+  - unattended-upgrades
+  - redshift-gtk
+  - screen
+  - python
+  - git
+  - gitk
+  - gpg
+  - python3-psutil
+  - pass
+  - encfs
+  - cryfs
+  - xdiskusage
+  - net-tools
+  - brave-browser
+  - qutebrowser
+  - freeplane
+  - calibre
+  - printer-driver-cjet
+  - imagemagick
+  - imagemagick-common
+  - imagemagick-doc
+  # using the default PPA - I use vim-gtk.
+  # However, with ppa:jonathonf - vim-gtk3 and vim-nox are needed for newest features.
+  - vim-gtk3
+  - vim-nox

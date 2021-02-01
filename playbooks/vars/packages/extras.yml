@@ -1,0 +1,6 @@
+---
+extras_packages:
+  - octave
+  - wxmaxima
+  - lastpass-cli
+  - insync

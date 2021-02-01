@@ -1,0 +1,28 @@
+---
+development_packages:
+  - code
+  - build-essential
+  - cmake
+  - clang
+  - ninja-build
+  - gdb
+  - lldb-10
+  - llvm-10*
+  - make
+  - python3-pip
+  - pylint
+  - cppcheck
+  - cppcheck-gui
+  - global
+  - exuberant-ctags
+  - autoconf
+  - golang-go
+  - google-mock
+  - googletest
+  - sqlite3
+  - sqlite3-doc
+  - sqlitebrowser
+  - pandoc
+  - graphviz
+  - graphviz-doc
+  - xdot

@@ -1,0 +1,8 @@
+---
+games_packages:
+  # Chess!!
+  - stockfish
+  - toga2
+  - phalanx
+  - pychess
+  - scid
