@@ -11,6 +11,6 @@
 - import_playbook: nepali_fonts.yml
   when: packages_only == "False"
 - import_playbook: vim_addons.yml
-  when: packages_only == "False"
+  when: packages_only == "False" and (install_mode == "all" or install_mode == "dev")
 - import_playbook: vscode_addons.yml
-  when: packages_only == "False"
+  when: packages_only == "False" and (install_mode == "all" or install_mode == "dev")

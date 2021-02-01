@@ -12,7 +12,6 @@
   vars:
     # You can override install mode from command line
     # with -e "mode=<mode>" [all|dev|basic]
-    install_mode: "basic"
     package_categories:
       - basic # always installed
       - development # dev/all

@@ -14,6 +14,7 @@ EOF
 }
 
 typeset -i FASTMODE_ENABLED=0;
+INSTALL_MODE_ARGS="-e install_mode=basic"
 PLAYBOOK_ARGS="-e packages_only=False"
 #Parsing options
 while getopts ${optstring} arg; do
