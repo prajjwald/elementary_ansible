@@ -2,6 +2,8 @@
 - hosts: localhost
   gather_facts: yes
   vars:
+    # Possible to set default mode to minimal, and override mode with -e "mode=all" (as an example)
+    mode: "empty"
     fruits:
       - apple
       - orange
@@ -14,7 +16,22 @@
 
     combined: "{{ fruits|union(empty)|union(colors) }}"
 
+  vars_files:
+    - ["virtualization.yml"]
+
   tasks:
-  - debug: msg="Entry is {{ item }}"
-    #loop: "{{ fruits }}"
-    loop: "{{ combined }}"
+    - debug: msg="Entry is {{ item }}"
+      #loop: "{{ fruits }}"
+      loop: "{{ combined }}"
+
+    - debug: msg="Fruits install {{ fruits }}"
+      when: mode == "all" or mode == "fruits"
+
+    - debug: msg="Empty install {{ empty }}"
+      when: mode == "all" or mode == "empty"
+
+    - debug: msg="colors install {{ colors }}"
+      when: mode == "all" or mode == "colors"
+
+    - debug: msg="virtualization install {{ virtualization_packages }}"
+      when: mode == "all" or mode == "virt"
