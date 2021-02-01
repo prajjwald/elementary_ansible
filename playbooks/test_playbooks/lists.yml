@@ -16,10 +16,14 @@
 
     combined: "{{ fruits|union(empty)|union(colors) }}"
 
-  vars_files:
-    - ["virtualization.yml"]
+    categories:
+      - virtualization
 
   tasks:
+    - include_vars:
+        file: "{{ item }}.yml"
+      loop: "{{ categories }}"
+
     - debug: msg="Entry is {{ item }}"
       #loop: "{{ fruits }}"
       loop: "{{ combined }}"
