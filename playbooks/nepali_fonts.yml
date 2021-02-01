@@ -4,13 +4,28 @@
   user: root
   become: yes
   hosts: all
+  vars:
+    fontsPath: "/usr/local/share/fonts/nepali_fonts"
+    # This font is expected to be present in the latest version, but not in prior ones
+    # Alternatively - for font removals, a reverse stat is possible
+    latestFont: "Rajdhani-SemiBold.ttf"
 
   tasks:
+ 
+      - name: Check that the nepali fonts are up to date
+        stat:
+          path: "{{ fontsPath }}/{{ latestFont }}"
+        register: nepaliFonts_check
+
+      - debug: msg="Fonts seem to exist and up to date, not setting up"
+        when: nepaliFonts_check.stat.exists
 
       - name: copy nepali fonts
         copy:
             src: files/fonts/nepali_fonts
-            dest: /usr/local/share/fonts/
+            dest: "{{ fontsPath }}/"
+        when: not nepaliFonts_check.stat.exists
 
       - name: update fonts cache
         command: fc-cache -fv
+        when: not nepaliFonts_check.stat.exists

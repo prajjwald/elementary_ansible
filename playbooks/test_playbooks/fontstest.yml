@@ -1,0 +1,20 @@
+- hosts: localhost
+  gather_facts: yes
+
+  vars:
+    fontsPath: "/usr/local/share/fonts/nepali_fonts"
+    # This font is expected to be present in the latest version, but not in prior ones
+    # Alternatively - for font removals, a reverse stat is possible
+    latestFont: "Rajdhani-SemiBold.ttf"
+
+  tasks:
+  - name: Check that the nepali fonts are up to date
+    stat:
+      path: "{{ fontsPath }}/{{ latestFont }}"
+    register: nepaliFonts_check
+
+  - debug: msg="exists"
+    when: nepaliFonts_check.stat.exists
+
+  - debug: msg="does not exist"
+    when: not nepaliFonts_check.stat.exists
