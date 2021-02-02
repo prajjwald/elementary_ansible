@@ -9,6 +9,6 @@ echo "QuickStart script for easy remote install";
 sudo apt-get install -y git &&\
 git clone https://github.com/prajjwald/elementary_ansible.git &&\
 cd elementary_ansible &&\
-./launcher.sh
+./launcher.sh $*
 
 cd && rm -rf $ANSIBLE_ELEMENTARY_TMPDIR;

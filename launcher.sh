@@ -52,7 +52,7 @@ then
     #sudo apt-add-repository -yu ppa:ansible/ansible
     #the ansible dconf module needs python-psutil, but it doesn't seem to auto-install
     #we use the dconf module to set various desktop settings
-    #sudo apt-get install -y ansible python-psutil
+    sudo apt-get install -y ansible python-psutil
 
     sudo apt -y upgrade
 
@@ -81,5 +81,5 @@ git pull # Not making any assumptions about how this directory got created initi
 
 echo "Running ansible"
 #no need for the -K option, as we just sudo'd twice
-INTERPRETER_ARGS="-e 'ansible_python_interpreter=/usr/bin/python3'"
+INTERPRETER_ARGS="-e ansible_python_interpreter=/usr/bin/python3"
 ansible-playbook -i localhost, -c local -b playbooks/elementary.yml ${INTERPRETER_ARGS} ${INSTALL_MODE_ARGS} ${PLAYBOOK_ARGS}
