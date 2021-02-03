@@ -1,0 +1,44 @@
+---
+- name: Ubuntu OS Desktop Configuration for user
+  gather_facts: true
+  hosts: all
+  become: no
+
+  vars:
+    autostart_items_path: "$HOME/.config/autostart"
+    dock_settings_path: "/org/gnome/shell/extensions/dash-to-dock"
+    dock_settings_shortcuts:
+      show-apps-at-top: "true"
+      dash-max-icon-size: "24"
+      autohide: "false"
+      dock-fixed: "false"
+      intellihide: "false"
+
+    other_settings:
+      org/gnome/desktop/interface/gtk-theme: "'Yaru-dark'"
+      org/gnome/shell/favorite-apps: "[ 'snap-store_ubuntu-software.desktop' ]"
+
+  tasks:
+    - name: Dock Settings for Ubuntu
+      dconf:
+        key: "{{ dock_settings_path }}/{{ item.key }}"
+        value: "{{ item.value | string}}"
+        state: present
+      with_dict: "{{ dock_settings_shortcuts }}"
+
+    - name: Other Settings for Ubuntu
+      dconf:
+        key: "{{ item.key }}"
+        value: "{{ item.value | string}}"
+        state: present
+      with_dict: "{{ other_settings}}"
+
+    - name: Hide the Ubuntu dock
+      command: gsettings set net.launchpad.plank.dock.settings:/net/launchpad/plank/docks/dock1/ show-dock-item false
+
+    - name: Copy AutoStart Items
+      copy:
+        src: "{{ item }}"
+        dest: "{{ autostart_items_path }}"
+      with_fileglob:
+        - "files/ubuntu/autostart/*"

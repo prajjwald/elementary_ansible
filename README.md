@@ -1,6 +1,12 @@
+
+
 # Elementary Ansible
 
+**Also works with Vanilla Ubuntu!**
+
 This repository contains some customizations to elementary os that I find fairly useful.
+
+As I have friends and family also using Ubuntu (Hera doesn't support all newer hardware unfortunately, and elementary OS 6 isn't out yet)...... I've added changes to make this work well with Ubuntu too.
 
 ## Quick Start for One Time Users
 
@@ -9,9 +15,25 @@ wget -c https://raw.githubusercontent.com/prajjwald/elementary_ansible/master/qu
 chmod +x quickstart.sh && ./quickstart.sh
 ```
 
+### But wait, do you want more? Who doesn't right?
+
+- By default - the script will only install basic packages which non-developer end users (potentially with older/slower machines) would need
+- if you have a faster/newer machine, or are technical, then you might want to install
+  - virtualization software
+  - development software
+  - scientific software
+  - etc
+
+If you want **all** packages - you can run the following (for other sub-categories - refer to the details section)
+
+```
+wget -c https://raw.githubusercontent.com/prajjwald/elementary_ansible/master/quickstart/quickstart.sh -a
+chmod +x quickstart.sh && ./quickstart.sh
+```
+
 <details>
   <summary>Click to expand for more details (you probably don't need this)</summary>
-  
+
 ## Quick Start for Normal Users
 
 ```bash
@@ -20,6 +42,7 @@ git clone https://github.com/prajjwald/elementary_ansible.git &&\
 cd elementary_ansible &&\
 ./launcher.sh
 ```
+
 ## Goals
 
 There are several goals I have in creating/maintaining this repository
@@ -27,7 +50,6 @@ There are several goals I have in creating/maintaining this repository
 * Having a quick way to get my elementary OS (re)installation get restored to a useful state for myself with minimal user interaction
 * Allowing me to get new elementary installations of family and friends to a similarly 'usable' state, with certain programs, fonts, setups, etc. already in place
 * Allowing me to share ideas with anyone else who might be interested
-
 
 ## Repository Organization
 
@@ -111,4 +133,5 @@ The repository can be broken down roughly as:
   - Development + Virtualization + Power Tools
   - Desktop (Re)Configuration
   - VSCode addons installation
-</details>
+    
+    </details>

@@ -4,80 +4,84 @@
   hosts: all
   become: no
   vars:
-      plank_dockitems_path: "$HOME/.config/plank/dock1/launchers"
-      plank_dockitems_to_remove: [ "org.pantheon.mail.dockitem", "org.gnome.Epiphany.dockitem" ]
+    plank_dockitems_path: "$HOME/.config/plank/dock1/launchers/"
+    plank_dockitems_to_remove:
+      ["org.pantheon.mail.dockitem", "org.gnome.Epiphany.dockitem"]
 
-      autostart_items_path: "$HOME/.config/autostart"
+    autostart_items_path: "$HOME/.config/autostart"
 
-      tiling_path: "/org/gnome/mutter/keybindings"
-      tiling_shortcuts:
-          toggle-tiled-left: "['<Super>Left']"
-          toggle-tiled-right: "['<Super>Right']"
+    tiling_path: "/org/gnome/mutter/keybindings"
+    tiling_shortcuts:
+      toggle-tiled-left: "['<Super>Left']"
+      toggle-tiled-right: "['<Super>Right']"
 
-      workspace_path: "/org/gnome/desktop/wm/keybindings"
-      workspace_shortcuts:
-          switch-to-workspace-left: "['<Control><Super>Left']"
-          switch-to-workspace-right: "['<Control><Super>Right']"
+    workspace_path: "/org/gnome/desktop/wm/keybindings"
+    workspace_shortcuts:
+      switch-to-workspace-left: "['<Control><Super>Left']"
+      switch-to-workspace-right: "['<Control><Super>Right']"
 
-      night_light_path: "/org/gnome/settings-daemon/plugins/color"
-      night_light_settings:
-          # explicitly disable night-light until bug with multi-displays is fixed
-          # use redshift-gtk in startup instead until then
-          night-light-enabled: "false"
-          night-light-schedule-automatic: "true"
+    night_light_path: "/org/gnome/settings-daemon/plugins/color"
+    night_light_settings:
+      # explicitly disable night-light until bug with multi-displays is fixed
+      # use redshift-gtk in startup instead until then
+      night-light-enabled: "false"
+      night-light-schedule-automatic: "true"
 
   tasks:
-      - name: Add Nepali Keyboard Layout
-        dconf:
-            key: "/org/gnome/desktop/input-sources/sources"
-            value: "[('xkb', 'us'), ('xkb', 'np')]"
-            state: present
+    - name: Add Nepali Keyboard Layout
+      dconf:
+        key: "/org/gnome/desktop/input-sources/sources"
+        value: "[('xkb', 'us'), ('xkb', 'np')]"
+        state: present
 
-      - name: Make Window Tiling Keys Mimic Windows
-        dconf:
-            key: "{{ tiling_path }}/{{ item.key }}"
-            value: "{{ item.value | string}}"
-            state: present
-        with_dict: "{{ tiling_shortcuts }}"
+    - name: Make Window Tiling Keys Mimic Windows
+      dconf:
+        key: "{{ tiling_path }}/{{ item.key }}"
+        value: "{{ item.value | string}}"
+        state: present
+      with_dict: "{{ tiling_shortcuts }}"
 
-      - name: Make Desktop Switching Keys Mimic Windows
-        dconf:
-            key: "{{ workspace_path }}/{{ item.key }}"
-            value: "{{ item.value | string}}"
-            state: present
-        with_dict: "{{ workspace_shortcuts }}"
+    - name: Make Desktop Switching Keys Mimic Windows
+      dconf:
+        key: "{{ workspace_path }}/{{ item.key }}"
+        value: "{{ item.value | string}}"
+        state: present
+      with_dict: "{{ workspace_shortcuts }}"
 
-      - name: Enable night-light, set it to automatic schedule
-        dconf:
-            key: "{{ night_light_path }}/{{ item.key }}"
-            value: "{{ item.value | string}}"
-            state: present
-        with_dict: "{{ night_light_settings }}"
+    - name: Enable night-light, set it to automatic schedule
+      dconf:
+        key: "{{ night_light_path }}/{{ item.key }}"
+        value: "{{ item.value | string}}"
+        state: present
+      with_dict: "{{ night_light_settings }}"
 
-      - name: Set dock icon size to small
-        dconf:
-            key: "/net/launchpad/plank/docks/dock1/icon-size"
-            value: "32"
-            state: present
+    - name: Set dock icon size to small
+      dconf:
+        key: "/net/launchpad/plank/docks/dock1/icon-size"
+        value: "32"
+        state: present
 
-      - name: Remove Some Launcher items glob
-        file:
-            path: "{{ plank_dockitems_path }}/{{ item }}"
-            state: absent
-        with_items: "{{ plank_dockitems_to_remove }}"
+    - name: Remove Some Launcher items glob
+      file:
+        path: "{{ plank_dockitems_path }}/{{ item }}"
+        state: absent
+      with_items: "{{ plank_dockitems_to_remove }}"
 
-      - name: Copy Launcher items
-        copy:
-            src: "{{ item }}"
-            dest: "{{ plank_dockitems_path }}"
-        with_fileglob:
-            - "files/elementary/launchers/*"
+    - name: Copy Launcher items
+      copy:
+        src: "{{ item }}"
+        dest: "{{ plank_dockitems_path }}"
+      with_fileglob:
+        - "files/elementary/launchers/*"
 
-      - name: Copy AutoStart Items
-        copy:
-            src: "{{ item }}"
-            dest: "{{ autostart_items_path }}"
-        with_fileglob:
-            - "files/elementary/autostart/*"
+    - name: Copy AutoStart Items
+      copy:
+        src: "{{ item }}"
+        dest: "{{ autostart_items_path }}"
+      with_fileglob:
+        - "files/elementary/autostart/*"
 
 - import_playbook: elementary_update_default_apps.yml
+
+- import_playbook: ubuntu_desktop_configuration.yml
+  when: ansible_lsb.id == "Ubuntu"

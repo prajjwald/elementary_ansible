@@ -46,15 +46,14 @@ sudo echo "Cached root credentials for package installation playbook"
 if [ ${FASTMODE_ENABLED} -ne 1 ];
 then
     sudo apt update
+    #Remove ansible if already installed - we will install from pip later
+    sudo apt remove -y ansible 
+
     echo "Installing some basic packages first";
-    sudo apt install -y git gpg software-properties-common python3 python3-distutils python3-psycopg2 aptitude curl wget
-    sudo apt -y autoremove
-    #sudo apt-add-repository -yu ppa:ansible/ansible
-    #the ansible dconf module needs python-psutil, but it doesn't seem to auto-install
-    #we use the dconf module to set various desktop settings
-    sudo apt-get install -y ansible python-psutil
+    sudo apt install -y git gpg software-properties-common python3 python3-distutils python3-psycopg2 aptitude curl wget python3-psutil
 
     sudo apt -y upgrade
+    sudo apt -y autoremove
 
     echo -n "Checking for pip3... "
     if (type pip3 2> /dev/null);
