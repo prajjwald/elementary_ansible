@@ -15,8 +15,8 @@
       intellihide: "false"
 
     other_settings:
-      org/gnome/desktop/interface/gtk-theme: "'Yaru-dark'"
-      org/gnome/shell/favorite-apps: "[ 'snap-store_ubuntu-software.desktop' ]"
+      /org/gnome/desktop/interface/gtk-theme: "'Yaru-dark'"
+      /org/gnome/shell/favorite-apps: "[ 'snap-store_ubuntu-software.desktop' ]"
 
   tasks:
     - name: Dock Settings for Ubuntu
