@@ -1,0 +1,17 @@
+---
+- hosts: all
+  vars:
+    destdir: "$HOME/tmp"
+
+  tasks:
+  - name: Creating directory if needed
+    file:
+      path: "{{ destdir }}"
+      state: directory
+
+  - name: Creating a file with content
+    copy:
+      dest: "{{ destdir }}/test.txt"
+      content: |
+        line {{ destdir }}
+        line 02
