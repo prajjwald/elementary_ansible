@@ -37,12 +37,6 @@
     target_names: ""
 
   tasks:
-  - name: Creating directory if needed
-    file:
-      path: "{{ plank_dockitems_path }}"
-      state: directory
-    when: False == True
-
   - name: Remove Some Launcher items
     file:
       path: "{{ plank_dockitems_path }}/{{ item }}"
@@ -54,7 +48,7 @@
       target_names: "{{ item }}.desktop,{{ target_names }}"
     with_items: "{{ target_files }}"
 
-  - name: Find test
+  - name: Find installed targets with appropriate paths
     find:
       paths: "{{snap_dir}},{{ apt_dir}},{{flatpak_dir}}"
       patterns: "{{ target_names }}"
