@@ -4,6 +4,7 @@
 # This is useful in Ubuntu vs Elementary for example, where an Elementary OS apt install
 # might correspond to an Ubuntu flatpak install
 - hosts: all
+  become: no
   vars:
     plank_dockitems_path: "$HOME/.config/plank/dock1/launchers"
     plank_dockitems_to_remove:
