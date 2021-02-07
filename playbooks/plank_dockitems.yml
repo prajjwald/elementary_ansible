@@ -1,0 +1,73 @@
+---
+# The goal of this file is to create plank dockitems independent of method of installation
+# Without having to copy files
+# This is useful in Ubuntu vs Elementary for example, where an Elementary OS apt install
+# might correspond to an Ubuntu flatpak install
+- hosts: all
+  vars:
+    plank_dockitems_path: "$HOME/.config/plank/dock1/launchers"
+    plank_dockitems_to_remove:
+      ["org.pantheon.mail.dockitem", "org.gnome.Epiphany.dockitem"]
+    flatpak_dir: "/var/lib/flatpak/exports/share/applications"
+    snap_dir: "/var/lib/snapd/desktop/applications"
+    apt_dir: "/usr/share/applications"
+    target_files:
+      - brave-browser
+      - firefox
+      - code
+      - com.github.alainm23.planner
+      - com.github.calo001.fondo
+      - com.github.mdh34.hackup
+      - com.jetbrains.PyCharm-Community
+      - com.jgraph.drawio.desktop
+      - com.meetfranz.Franz
+      - caprine_caprine.dockitem
+      - com.spotify.Client
+      - com.viber.Viber
+      - freeplane
+      - io.elementary.terminal
+      - io.typora.Typora
+      - mailspring_mailspring
+      - planmaker-free18
+      - superproductivity_superproductivity
+      - textmaker-free18
+      - us.zoom.Zoom
+      - com.github.mdh34.quickdocs
+    target_names: ""
+
+  tasks:
+  - name: Creating directory if needed
+    file:
+      path: "{{ plank_dockitems_path }}"
+      state: directory
+    when: False == True
+
+  - name: Remove Some Launcher items
+    file:
+      path: "{{ plank_dockitems_path }}/{{ item }}"
+      state: absent
+    with_items: "{{ plank_dockitems_to_remove }}"
+
+  - name: Build a list
+    set_fact:
+      target_names: "{{ item }}.desktop,{{ target_names }}"
+    with_items: "{{ target_files }}"
+
+  - name: Find test
+    find:
+      paths: "{{snap_dir}},{{ apt_dir}},{{flatpak_dir}}"
+      patterns: "{{ target_names }}"
+      # flatpak uses symlinks - so the default filetype of 'file' is not sufficient
+      file_type: any
+      recurse: no
+    register: find_logs
+
+  - name: Create plank dockitems
+    copy:
+      dest: "{{ plank_dockitems_path }}/{{item.path.replace('.desktop', '.dockitem') | regex_replace('.*/','') }}"
+      content: |
+        [PlankDockItemPreferences]
+        Launcher=file://{{item.path}}
+    with_items: "{{ find_logs.files }}"
+    loop_control:
+      label: "{{item.path.replace('.desktop', '.dockitem') | regex_replace('.*/','') }}"

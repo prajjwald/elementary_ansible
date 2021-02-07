@@ -79,6 +79,8 @@ fi
 git pull # Not making any assumptions about how this directory got created initially
 
 echo "Running ansible"
+#No need to print out the skipped tasks
+export ANSIBLE_DISPLAY_SKIPPED_HOSTS=false
 #no need for the -K option, as we just sudo'd twice
 INTERPRETER_ARGS="-e ansible_python_interpreter=/usr/bin/python3"
 ansible-playbook -i localhost, -c local -b playbooks/elementary.yml ${INTERPRETER_ARGS} ${INSTALL_MODE_ARGS} ${PLAYBOOK_ARGS}

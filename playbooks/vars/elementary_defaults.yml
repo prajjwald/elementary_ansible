@@ -8,5 +8,6 @@ distro_packages:
   - com.github.lainsce.notejot
   - com.github.calo001.fondo
   - com.github.mdh34.hackup
+  - com.github.mdh34.quickdocs
 
 distro_flatpaks: []
