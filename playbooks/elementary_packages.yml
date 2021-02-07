@@ -59,12 +59,14 @@
       apt_key:
         url: https://download.docker.com/linux/ubuntu/gpg
         state: present
+      when: install_mode == "all" or install_mode == "dev"
 
     - name: Docker Repository
       apt_repository:
         repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ubuntu_codename}} stable"
         filename: docker
         state: present
+      when: install_mode == "all" or install_mode == "dev"
 
     - name: Jonathon F's PPA for latest vim
       apt_repository:
@@ -87,6 +89,7 @@
       apt_key:
         url: https://packages.microsoft.com/keys/microsoft.asc
         state: present
+      when: install_mode == "all" or install_mode == "dev"
 
     - name: VSCode Trusted GPG Key
       shell: |
@@ -94,25 +97,29 @@
         install -o root -g root -m 644 packages.microsoft.gpg /etc/apt/trusted.gpg.d/
       args:
         warn: false # turn warning off, since curl is part of a pipe here
+      when: install_mode == "all" or install_mode == "dev"
 
     - name: VSCode Repository
       apt_repository:
         repo: "deb [arch=amd64 signed-by=/etc/apt/trusted.gpg.d/packages.microsoft.gpg] https://packages.microsoft.com/repos/vscode stable main"
         state: present
         filename: vscode
+      when: install_mode == "all" or install_mode == "dev"
 
     - name: Add Insync Key From Ubuntu Keyserver
       apt_key:
         keyserver: keyserver.ubuntu.com
         id: ACCAF35C
+      when: install_mode == "all"
 
     - name: Insync Repository
       apt_repository:
         repo: "deb http://apt.insync.io/ubuntu {{ubuntu_codename}} non-free contrib"
         state: present
         filename: insync
+      when: install_mode == "all"
 
-    - name: Check if my_package is installed
+    - name: Check if freeoffice is already installed
       command: dpkg-query -W softmaker-freeoffice-2018
       register: freeoffice2018_check_deb
       failed_when: freeoffice2018_check_deb.rc > 1
