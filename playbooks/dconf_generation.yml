@@ -1,0 +1,80 @@
+---
+- name: Elementary OS Desktop Configuration for user
+  gather_facts: true
+  hosts: all
+  become: no
+  vars:
+    schema_path: "/usr/share/glib-2.0/schemas"
+    override_file: "99_ansible_elementary.gschema.override"
+    file_output: ""
+
+    settings_list:
+      - name: "workspace settings"
+        os: "all"
+        suffix: ""
+        path: "/org/gnome/desktop/wm/keybindings"
+        entries:
+          switch-to-workspace-left: "['<Control><Super>Left']"
+          switch-to-workspace-right: "['<Control><Super>Right']"
+      - name: "night light"
+        os: "all"
+        suffix: ""
+        path: "/org/gnome/settings-daemon/plugins/color"
+        entries:
+          night-light-enabled: "false"
+          night-light-schedule-automatic: "true"
+      - name: "tiling"
+        os: "all"
+        suffix: ""
+        path: "/org/gnome/mutter/keybindings"
+        entries:
+          toggle-tiled-left: "['<Super>Left']"
+          toggle-tiled-right: "['<Super>Right']"
+      - name: "Add Nepali Keyboard Layout"
+        os: "all"
+        suffix: ""
+        path: "/org/gnome/desktop/input-sources"
+        entries:
+          sources: "[('xkb', 'us'), ('xkb', 'np')]"
+      - name: "Plank Dock Settings"
+        os: "all"
+        suffix: ""
+        path: "/net/launchpad/plank/docks/dock1"
+        entries:
+          icon-size: "32"
+      - name: "ubuntu_dock"
+        os: "ubuntu"
+        suffix: ":ubuntu"
+        path: "/org/gnome/shell/extensions/dash-to-dock"
+        entries:
+          show-apps-at-top: "true"
+          dash-max-icon-size: "24"
+          autohide: "false"
+          dock-fixed: "false"
+          intellihide: "false"
+      - name: "ubuntu_favorites"
+        os: "ubuntu"
+        suffix: ":ubuntu"
+        path: "/org/gnome/desktop/interface"
+        entries:
+          gtk-theme: "'Yaru-dark'"
+
+  tasks:
+  - name: Loop through paths
+    include_tasks: dconf_singleitem.yml
+    when: outer_var.os == "all" or outer_var.os == ansible_lsb.id|lower
+    loop: "{{ settings_list }}"
+    loop_control:
+      loop_var: outer_var
+
+  - name: Create override file
+    become: true
+    copy:
+      dest: "{{schema_path}}/{{override_file}}"
+      content: "{{file_output}}"
+      owner: root
+      group: root
+
+  - name: compile schema override
+    become: true
+    command: glib-compile-schemas {{schema_path}}/

@@ -8,62 +8,36 @@
     #If this file exists - we will not try to configure dock
     plank_check_file: "mailspring_mailspring.dockitem"
     autostart_items_path: "$HOME/.config/autostart"
-
-    tiling_path: "/org/gnome/mutter/keybindings"
-    tiling_shortcuts:
-      toggle-tiled-left: "['<Super>Left']"
-      toggle-tiled-right: "['<Super>Right']"
-
-    workspace_path: "/org/gnome/desktop/wm/keybindings"
-    workspace_shortcuts:
-      switch-to-workspace-left: "['<Control><Super>Left']"
-      switch-to-workspace-right: "['<Control><Super>Right']"
-
-    night_light_path: "/org/gnome/settings-daemon/plugins/color"
-    night_light_settings:
-      # explicitly disable night-light until bug with multi-displays is fixed
-      # use redshift-gtk in startup instead until then
-      night-light-enabled: "false"
-      night-light-schedule-automatic: "true"
+    global_autostart: "/etc/skel/.config/autostart"
+    global_dockitems_path: "/etc/skel/.config/plank/dock1/launchers"
 
   tasks:
-    - name: Add Nepali Keyboard Layout
-      dconf:
-        key: "/org/gnome/desktop/input-sources/sources"
-        value: "[('xkb', 'us'), ('xkb', 'np')]"
-        state: present
-
-    - name: Make Window Tiling Keys Mimic Windows
-      dconf:
-        key: "{{ tiling_path }}/{{ item.key }}"
-        value: "{{ item.value | string}}"
-        state: present
-      with_dict: "{{ tiling_shortcuts }}"
-
-    - name: Make Desktop Switching Keys Mimic Windows
-      dconf:
-        key: "{{ workspace_path }}/{{ item.key }}"
-        value: "{{ item.value | string}}"
-        state: present
-      with_dict: "{{ workspace_shortcuts }}"
-
-    - name: Enable night-light, set it to automatic schedule
-      dconf:
-        key: "{{ night_light_path }}/{{ item.key }}"
-        value: "{{ item.value | string}}"
-        state: present
-      with_dict: "{{ night_light_settings }}"
-
-    - name: Set dock icon size to small
-      dconf:
-        key: "/net/launchpad/plank/docks/dock1/icon-size"
-        value: "32"
-        state: present
-
     - name: Copy AutoStart Items
       copy:
         src: "{{ item }}"
         dest: "{{ autostart_items_path }}"
+      with_fileglob:
+        - "files/elementary/autostart/*"
+
+    - name: Create global autostart template directory
+      become: true
+      file:
+        path: "{{item}}"
+        state: directory
+        owner: root
+        group: root
+      loop:
+        - "{{global_autostart}}"
+        - "{{global_dockitems_path}}"
+
+#TODO - this should be loopable with the block above (per user) rather than a copy paste
+    - name: Copy Global AutoStart Items
+      become: true
+      copy:
+        src: "{{ item }}"
+        dest: "{{ global_autostart }}"
+        owner: root
+        group: root
       with_fileglob:
         - "files/elementary/autostart/*"
 
@@ -72,7 +46,6 @@
         path: "{{ plank_dockitems_path }}/{{ plank_check_file }}"
       register: plankItems_check
 
-
 - import_playbook: elementary_update_default_apps.yml
 
 - import_playbook: ubuntu_desktop_configuration.yml
@@ -80,3 +53,5 @@
 
 - import_playbook: plank_dockitems.yml
   when: not plankItems_check.stat.exists
+
+- import_playbook: dconf_generation.yml

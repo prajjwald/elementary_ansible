@@ -7,6 +7,7 @@
   become: no
   vars:
     plank_dockitems_path: "$HOME/.config/plank/dock1/launchers"
+    global_dockitems_path: "/etc/skel/.config/plank/dock1/launchers"
     plank_dockitems_to_remove:
       ["org.pantheon.mail.dockitem", "org.gnome.Epiphany.dockitem"]
     flatpak_dir: "/var/lib/flatpak/exports/share/applications"
@@ -37,12 +38,6 @@
     target_names: ""
 
   tasks:
-  - name: Remove Some Launcher items
-    file:
-      path: "{{ plank_dockitems_path }}/{{ item }}"
-      state: absent
-    with_items: "{{ plank_dockitems_to_remove }}"
-
   - name: Build a list
     set_fact:
       target_names: "{{ item }}.desktop,{{ target_names }}"
@@ -57,12 +52,38 @@
       recurse: no
     register: find_logs
 
+  - name: Remove Some Launcher items
+    file:
+      path: "{{ plank_dockitems_path }}/{{ item }}"
+      state: absent
+    with_items: "{{ plank_dockitems_to_remove }}"
+
   - name: Create plank dockitems
     copy:
       dest: "{{ plank_dockitems_path }}/{{item.path.replace('.desktop', '.dockitem') | regex_replace('.*/','') }}"
       content: |
         [PlankDockItemPreferences]
         Launcher=file://{{item.path}}
+    with_items: "{{ find_logs.files }}"
+    loop_control:
+      label: "{{item.path.replace('.desktop', '.dockitem') | regex_replace('.*/','') }}"
+
+  - name: Remove Some Global Launcher items
+    become: true
+    file:
+      path: "{{ global_dockitems_path }}/{{ item }}"
+      state: absent
+    with_items: "{{ plank_dockitems_to_remove }}"
+
+  - name: Create Global Plank dockitems
+    become: true
+    copy:
+      dest: "{{ global_dockitems_path }}/{{item.path.replace('.desktop', '.dockitem') | regex_replace('.*/','') }}"
+      content: |
+        [PlankDockItemPreferences]
+        Launcher=file://{{item.path}}
+      owner: root
+      group: root
     with_items: "{{ find_logs.files }}"
     loop_control:
       label: "{{item.path.replace('.desktop', '.dockitem') | regex_replace('.*/','') }}"

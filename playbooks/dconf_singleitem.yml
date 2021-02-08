@@ -1,0 +1,15 @@
+- name: Add topline
+  set_fact:
+    file_output: "{{file_output}}\n[{{outer_var.path.replace('/', '.')| regex_replace('^.','')}}{{outer_var.suffix}}]\n"
+
+- name: Apply {{outer_var.name}} settings for user
+  dconf:
+    key: "{{outer_var.path}}/{{item.key}}"
+    value: "{{item.value | string}}"
+    state: present
+  loop: "{{outer_var.entries|dict2items}}"
+
+- name: Build file from settings
+  set_fact:
+    file_output: "{{file_output}}{{item.key}}={{item.value}}\n"
+  loop: "{{outer_var.entries|dict2items}}"
