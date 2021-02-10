@@ -10,36 +10,27 @@
 
     settings_list:
       - name: "workspace settings"
-        os: "all"
-        suffix: ""
         path: "/org/gnome/desktop/wm/keybindings"
         entries:
           switch-to-workspace-left: "['<Control><Super>Left']"
           switch-to-workspace-right: "['<Control><Super>Right']"
       - name: "night light"
-        os: "all"
-        suffix: ""
         path: "/org/gnome/settings-daemon/plugins/color"
         entries:
           night-light-enabled: "false"
           night-light-schedule-automatic: "true"
       - name: "tiling"
-        os: "all"
-        suffix: ""
         path: "/org/gnome/mutter/keybindings"
         entries:
           toggle-tiled-left: "['<Super>Left']"
           toggle-tiled-right: "['<Super>Right']"
       - name: "Add Nepali Keyboard Layout"
-        os: "all"
-        suffix: ""
         path: "/org/gnome/desktop/input-sources"
         entries:
           sources: "[('xkb', 'us'), ('xkb', 'np')]"
       - name: "Plank Dock Settings"
-        os: "all"
-        suffix: ""
         path: "/net/launchpad/plank/docks/dock1"
+        gpath: "net.launchpad.plank.dock.settings"
         entries:
           icon-size: "32"
       - name: "ubuntu_dock"
@@ -55,26 +46,32 @@
       - name: "ubuntu_favorites"
         os: "ubuntu"
         suffix: ":ubuntu"
+        path: "/org/gnome/shell"
+        entries:
+          favorite-apps: "['snap-store_ubuntu-software.desktop']"
+      - name: "ubuntu_theme"
+        os: "ubuntu"
+        suffix: ":ubuntu"
         path: "/org/gnome/desktop/interface"
         entries:
           gtk-theme: "'Yaru-dark'"
 
   tasks:
-  - name: Loop through paths
-    include_tasks: dconf_singleitem.yml
-    when: outer_var.os == "all" or outer_var.os == ansible_lsb.id|lower
-    loop: "{{ settings_list }}"
-    loop_control:
-      loop_var: outer_var
+    - name: Loop through paths
+      include_tasks: dconf_singleitem.yml
+      when: (outer_var.os is undefined) or (outer_var.os == ansible_lsb.id|lower)
+      loop: "{{ settings_list }}"
+      loop_control:
+        loop_var: outer_var
 
-  - name: Create override file
-    become: true
-    copy:
-      dest: "{{schema_path}}/{{override_file}}"
-      content: "{{file_output}}"
-      owner: root
-      group: root
+    - name: Create override file
+      become: true
+      copy:
+        dest: "{{schema_path}}/{{override_file}}"
+        content: "{{file_output}}"
+        owner: root
+        group: root
 
-  - name: compile schema override
-    become: true
-    command: glib-compile-schemas {{schema_path}}/
+    - name: compile schema override
+      become: true
+      command: glib-compile-schemas {{schema_path}}/

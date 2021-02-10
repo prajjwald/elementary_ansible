@@ -1,6 +1,12 @@
-- name: Add topline
-  set_fact:
-    file_output: "{{file_output}}\n[{{outer_var.path.replace('/', '.')| regex_replace('^.','')}}{{outer_var.suffix}}]\n"
+- set_fact:
+    dconf_to_gsettings: "{{outer_var.path.replace('/', '.')| regex_replace('^.','')}}"
+    suffix: "{{outer_var.suffix|default('')}}"
+
+- set_fact:
+    gsettings_path: "{{outer_var.gpath|default(dconf_to_gsettings)}}"
+
+- set_fact:
+    file_output: "{{file_output}}\n[{{gsettings_path}}{{suffix}}]\n"
 
 - name: Apply {{outer_var.name}} settings for user
   dconf:

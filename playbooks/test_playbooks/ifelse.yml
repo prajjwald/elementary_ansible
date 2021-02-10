@@ -1,0 +1,22 @@
+---
+- name: Test default assignment
+  hosts: all
+  vars:
+    normal: "apple"
+    #favorite: "orange"
+    #mychoice: "{{ favorite if (favorite is defined) else normal }}"
+    mydict:
+      a: "apple"
+      b: "ball"
+      #c: "cat"
+    out: "{{ mydict.a }}"
+
+  tasks:
+    - set_fact:
+        mychoice: "{{ favorite if (favorite is defined) else ':'+normal}}"
+        bleh: "{{normal if (normal is defined) else favorite}}"
+    - set_fact:
+        out: "{{mydict.c}}"
+      when: mydict.c is defined
+
+    - debug: msg="out is {{out}}"
