@@ -1,6 +1,7 @@
 - set_fact:
     dconf_to_gsettings: "{{outer_var.path.replace('/', '.')| regex_replace('^.','')}}"
     suffix: "{{outer_var.suffix|default('')}}"
+    default_schema: "{{schema_path}}/default-settings.gschema.override"
 
 - set_fact:
     gsettings_path: "{{outer_var.gpath|default(dconf_to_gsettings)}}"
@@ -18,4 +19,15 @@
 - name: Build file from settings
   set_fact:
     file_output: "{{file_output}}{{item.key}}={{item.value}}\n"
+  loop: "{{outer_var.entries|dict2items}}"
+
+- name: Comment out related keys from default settings
+  become: yes
+  ansible.builtin.replace:
+    path: "{{default_schema}}"
+    regexp: "^(\\s*{{item.key}}\\s*=.*)$"
+    replace: '# \1'
+    after: "{{gsettings_path}}"
+    before: '\[\s*[a-zA-Z]'
+    backup: yes
   loop: "{{outer_var.entries|dict2items}}"

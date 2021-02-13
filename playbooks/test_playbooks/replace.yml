@@ -1,0 +1,24 @@
+---
+- hosts: all
+  vars:
+    replacements:
+      - name: "fake testkey 1"
+        path: "net.launchpad.plank.dock.settings"
+        key: "triggers"
+      - name: "fake testkey 2"
+        path: "org.freedesktop.ibus.panel"
+        key: "triggers"
+      - name: "fake testkey 3"
+        path: "org.gnome.desktop.datetime"
+        key: "triggers"
+
+  tasks:
+    - name: key replace
+      ansible.builtin.replace:
+        path: default-settings.gschema.override
+        regexp: "^(\\s*{{item.key}}\\s*=.*)$"
+        replace: '# \1'
+        after: "{{item.path}}"
+        before: '\[\s*[a-zA-Z]'
+        backup: no
+      loop: "{{replacements}}"
