@@ -5,6 +5,7 @@
   become: no
   vars:
     schema_path: "/usr/share/glib-2.0/schemas"
+    default_schema: "{{schema_path}}/default-settings.gschema.override"
     override_file: "99_ansible_elementary.gschema.override"
     file_output: ""
 
@@ -28,6 +29,7 @@
         path: "/org/gnome/desktop/input-sources"
         entries:
           sources: "[('xkb', 'us'), ('xkb', 'np')]"
+#xkb-options: ""
       - name: "Plank Dock Settings"
         path: "/net/launchpad/plank/docks/dock1"
         gpath: "net.launchpad.plank.dock.settings"
@@ -57,6 +59,11 @@
           gtk-theme: "'Yaru-dark'"
 
   tasks:
+    - name: Check that the nepali fonts are up to date
+      stat:
+        path: "{{ default_schema }}"
+      register: defaultschema_exists
+
     - name: Loop through paths
       include_tasks: dconf_singleitem.yml
       when: (outer_var.os is undefined) or (outer_var.os == ansible_lsb.id|lower)

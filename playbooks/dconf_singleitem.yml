@@ -1,7 +1,6 @@
 - set_fact:
     dconf_to_gsettings: "{{outer_var.path.replace('/', '.')| regex_replace('^.','')}}"
     suffix: "{{outer_var.suffix|default('')}}"
-    default_schema: "{{schema_path}}/default-settings.gschema.override"
 
 - set_fact:
     gsettings_path: "{{outer_var.gpath|default(dconf_to_gsettings)}}"
@@ -31,3 +30,4 @@
     before: '\[\s*[a-zA-Z]'
     backup: yes
   loop: "{{outer_var.entries|dict2items}}"
+  when: defaultschema_exists.stat.exists
