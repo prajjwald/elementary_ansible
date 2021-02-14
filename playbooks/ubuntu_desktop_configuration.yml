@@ -28,3 +28,13 @@
         group: root
       with_fileglob:
         - "files/ubuntu/autostart/*"
+
+    - name: Skip Welcome Screen for New Users
+      become: true
+      copy:
+        dest: "/etc/skel/.config/gnome-initial-setup-done"
+        content: "yes"
+        owner: root
+        group: root
+
+
