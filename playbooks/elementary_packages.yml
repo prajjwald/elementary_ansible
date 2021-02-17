@@ -38,6 +38,7 @@
       - com.wps.Office
       - com.meetfranz.Franz
       - com.jetbrains.PyCharm-Community"
+      - Bitwarden
 
     flatpak_packages: "{{ common_flatpak_packages|union(distro_flatpaks) }}"
     npm_packages:

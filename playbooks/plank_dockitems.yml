@@ -35,6 +35,7 @@
       - textmaker-free18
       - us.zoom.Zoom
       - com.github.mdh34.quickdocs
+      - com.bitwarden.desktop
     target_names: ""
 
   tasks:
