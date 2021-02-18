@@ -84,3 +84,6 @@ export ANSIBLE_DISPLAY_SKIPPED_HOSTS=false
 #no need for the -K option, as we just sudo'd twice
 INTERPRETER_ARGS="-e ansible_python_interpreter=/usr/bin/python3"
 ansible-playbook -i localhost, -c local -b playbooks/elementary.yml ${INTERPRETER_ARGS} ${INSTALL_MODE_ARGS} ${PLAYBOOK_ARGS}
+
+# Launch plank in case the user ran this on ubuntu and did not have plank started by default
+plank&

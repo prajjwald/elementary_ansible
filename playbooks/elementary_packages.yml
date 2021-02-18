@@ -199,8 +199,16 @@
       local_action: command whoami
       register: username_on_the_host
 
+    - name: Determine available groups
+      getent:
+        database: group
+
     - name: "Add user {{username_on_the_host.stdout}} to groups lxd, docker"
       user:
         name: "{{username_on_the_host.stdout}}"
-        groups: lxd, docker
+        groups: "{{ item }}"
         append: yes
+      when: (install_mode == "all" or install_mode == "dev") and item in ansible_facts.getent_group
+      with_items:
+        - lxd
+        - docker
