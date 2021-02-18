@@ -1,0 +1,55 @@
+---
+- name: test package installation refactor
+  gather_facts: true
+  hosts: all
+  become: no
+  vars:
+    packages:
+      vim-gtk:
+        description: GTK UI version of the vim editor
+        default: apt
+        # no-mode specified => always install
+        autostart: no # default -> no, just here as an example
+        dockitem: no # default -> no, just here as an example
+      fondo:
+        description: Beautiful wallpaper app
+        installer: apt
+        release_installers:
+          ubuntu: flatpak
+      spotify:
+        description: great music streaming app
+        installer: flatpak
+      screen:
+        installer: apt
+      pycharm:
+        installer: flatpak
+        modes:
+          - dev
+      lxd:
+        installer: snap
+        modes:
+          - virt
+      docker:
+        installer: apt
+        modes:
+          - virt
+      hackup:
+        installer: none
+        release_installers:
+          ubuntu: flatpak
+          elementary: apt
+      steam-installer:
+        installer: none
+        release_installers:
+          ubuntu_focal: apt
+          ubuntu_groovy: apt
+      steam:
+        installer: none
+        release_installers:
+          elementary_hera: apt
+          ubuntu_bionic: apt
+# TODO: write tasks that print out the actions that would be taken (first generate lists)
+# ... assuming different distros/releases
+# Goal - run snap, flatpak, apt, with corresponding auto-generated lists
+# ... also, create dock items and autostart items as needed
+# TODO: also add dropbox to autostart
