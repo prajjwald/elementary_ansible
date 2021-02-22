@@ -128,7 +128,7 @@
 
     - name: Install freeoffice from deb
       apt:
-        deb: https://www.freeoffice.com/download.php?filename=https://www.softmaker.net/down/softmaker-freeoffice-2018_976-01_amd64.deb
+        deb: https://www.softmaker.net/down/softmaker-freeoffice-2018_982-01_amd64.deb
       when: freeoffice2018_check_deb.rc == 1
 
     - name: Add freeoffice repository using script in installed deb

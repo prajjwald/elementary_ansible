@@ -1,0 +1,67 @@
+[apps/update-manager]
+first-run=false
+launch-count=1
+launch-time=int64 1613862807
+
+[com/ubuntu/update-notifier]
+release-check-time=uint32 1613862795
+
+[org/gnome/control-center]
+last-panel='notifications'
+
+[org/gnome/desktop/background]
+show-desktop-icons=false
+
+[org/gnome/desktop/input-sources]
+sources=[('xkb', 'us')]
+xkb-options=@as []
+
+[org/gnome/desktop/interface]
+gtk-im-module='gtk-im-context-simple'
+gtk-theme='Yaru'
+
+[org/gnome/desktop/notifications]
+application-children=['org-gnome-nautilus', 'update-manager', 'apport-gtk', 'gnome-network-panel', 'firefox']
+
+[org/gnome/desktop/notifications/application/apport-gtk]
+application-id='apport-gtk.desktop'
+
+[org/gnome/desktop/notifications/application/firefox]
+application-id='firefox.desktop'
+
+[org/gnome/desktop/notifications/application/gnome-network-panel]
+application-id='gnome-network-panel.desktop'
+
+[org/gnome/desktop/notifications/application/org-gnome-nautilus]
+application-id='org.gnome.Nautilus.desktop'
+
+[org/gnome/desktop/notifications/application/update-manager]
+application-id='update-manager.desktop'
+
+[org/gnome/desktop/privacy]
+report-technical-problems=true
+
+[org/gnome/desktop/search-providers]
+sort-order=['org.gnome.Contacts.desktop', 'org.gnome.Documents.desktop', 'org.gnome.Nautilus.desktop']
+
+[org/gnome/desktop/sound]
+allow-volume-above-100-percent=false
+
+[org/gnome/evolution-data-server]
+migrated=true
+network-monitor-gio-name=''
+
+[org/gnome/nautilus/preferences]
+default-folder-viewer='icon-view'
+search-filter-time-type='last_modified'
+search-view='list-view'
+
+[org/gnome/nautilus/window-state]
+initial-size=(890, 550)
+maximized=false
+
+[org/gnome/shell/extensions/dash-to-dock]
+preferred-monitor=0
+
+[org/gnome/system/location]
+enabled=false

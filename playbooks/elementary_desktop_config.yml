@@ -12,6 +12,15 @@
     global_dockitems_path: "/etc/skel/.config/plank/dock1/launchers"
 
   tasks:
+    - name: Create local directories
+      become: no
+      file:
+        path: "{{item}}"
+        state: directory
+      loop:
+        - "{{plank_dockitems_path}}"
+        - "{{autostart_items_path}}"
+
     - name: Copy AutoStart Items
       copy:
         src: "{{ item }}"

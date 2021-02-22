@@ -27,5 +27,5 @@
         when: not nepaliFonts_check.stat.exists
 
       - name: update fonts cache
-        command: fc-cache -fv
+        command: fc-cache -v
         when: not nepaliFonts_check.stat.exists
