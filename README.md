@@ -37,7 +37,7 @@ chmod +x quickstart.sh && ./quickstart.sh
 ## Quick Start for Normal Users
 
 ```bash
-sudo apt-get install -y git &&\
+sudo apt install -y git &&\
 git clone https://github.com/prajjwald/elementary_ansible.git &&\
 cd elementary_ansible &&\
 ./launcher.sh

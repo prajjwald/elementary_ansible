@@ -1,14 +1,22 @@
 #!/bin/bash
 
-ANSIBLE_ELEMENTARY_TMPDIR=/tmp/ansible_elementary;
-rm -rf $ANSIBLE_ELEMENTARY_TMPDIR && mkdir -p $ANSIBLE_ELEMENTARY_TMPDIR;
-cd $ANSIBLE_ELEMENTARY_TMPDIR;
+ANSIBLE_ELEMENTARY_TMPDIR="$HOME/tmp/ansible_elementary";
 
 echo "QuickStart script for easy remote install";
 
-sudo apt-get install -y git &&\
-git clone https://github.com/prajjwald/elementary_ansible.git &&\
-cd elementary_ansible &&\
+mkdir -p "$ANSIBLE_ELEMENTARY_TMPDIR";
+mv "$0" "${ANSIBLE_ELEMENTARY_TMPDIR}";
+cd $ANSIBLE_ELEMENTARY_TMPDIR;
+
+if [ -d "${ANSIBLE_ELEMENTARY_TMPDIR}/elementary_ansible" ];
+then
+    cd "${ANSIBLE_ELEMENTARY_TMPDIR}/elementary_ansible" && git pull;
+else
+    sudo apt install -y git &&\
+    git clone https://github.com/prajjwald/elementary_ansible.git
+fi
+
+cd "${ANSIBLE_ELEMENTARY_TMPDIR}/elementary_ansible" &&\
 ./launcher.sh $*
 
-cd && rm -rf $ANSIBLE_ELEMENTARY_TMPDIR;
+cd; # Go back home

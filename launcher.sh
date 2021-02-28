@@ -13,6 +13,32 @@ EOF
     exit 1
 }
 
+# 0 -> installed, non-zero (1) -> not installed
+[ -f /usr/bin/textmaker18free ]; export FREEOFFICE_CHECK=$?;
+
+# Certain packages seem to take a really long time to download
+# And should not hold up the rest of the install.
+# Freeoffice is one of them - installing out of ansible
+download_special_packages() (
+    if [ ${FREEOFFICE_CHECK} -ne 0 ];
+    then
+        echo "Downloading freeoffice";
+        wget -cq "https://www.freeoffice.com/download.php?filename=https://www.softmaker.net/down/softmaker-freeoffice-2018_976-01_amd64.deb" -O softmaker-freeoffice-2018_amd64.deb;
+    fi
+)
+
+install_special_packages() (
+    if [ ${FREEOFFICE_CHECK} -ne 0];
+    then
+        echo "Installing freeoffice";
+        apt install -y softmaker-freeoffice-2018_amd64.deb;
+        echo "Adding Freeoffice Repository to Apt Sources"
+        /usr/share/freeoffice2018/add_apt_repo.sh;
+    fi
+)
+
+download_special_packages&
+
 typeset -i FASTMODE_ENABLED=0;
 INSTALL_MODE_ARGS="-e install_mode=basic"
 PLAYBOOK_ARGS="-e packages_only=False"
@@ -84,6 +110,11 @@ export ANSIBLE_DISPLAY_SKIPPED_HOSTS=false
 #no need for the -K option, as we just sudo'd twice
 INTERPRETER_ARGS="-e ansible_python_interpreter=/usr/bin/python3"
 ansible-playbook -i localhost, -c local -b playbooks/elementary.yml ${INTERPRETER_ARGS} ${INSTALL_MODE_ARGS} ${PLAYBOOK_ARGS}
+
+# Wait for any outstanding downloads
+echo "Now waiting for ongoing downloads - leave this terminal open"
+wait;
+install_special_packages;
 
 # Launch plank in case the user ran this on ubuntu and did not have plank started by default
 plank&
