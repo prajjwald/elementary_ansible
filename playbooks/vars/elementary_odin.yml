@@ -3,7 +3,8 @@ ubuntu_codename: 'focal'
 release_packages:
   - steam-installer
   - simplescreenrecorder
-  - diffuse
+distro_flatpaks:
+  - io.github.mightycreak.Diffuse
   - com.github.alainm23.planner
   - com.github.babluboy.bookworm
   - com.github.lainsce.palaura
