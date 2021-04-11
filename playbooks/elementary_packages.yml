@@ -4,9 +4,9 @@
   user: root
   hosts: all
   vars_files:
-    - ["vars/{{ ansible_lsb.id }}_defaults.yml", "vars/ubuntu_defaults.yml"]
+    - ["vars/{{ ansible_lsb.id | lower }}_defaults.yml", "vars/ubuntu_defaults.yml"]
     - [
-        "vars/{{ ansible_lsb.id }}_{{ansible_lsb.codename}}.yml",
+        "vars/{{ ansible_lsb.id | lower }}_{{ansible_lsb.codename | lower}}.yml",
         "vars/most_codenames.yml",
       ]
   vars:

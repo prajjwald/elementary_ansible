@@ -1,13 +1,5 @@
 ---
-distro_packages:
+distro_packages: []
   # elementary OS apps
-  - com.github.alainm23.planner
-  - com.github.babluboy.bookworm
-  - com.github.lainsce.palaura
-  - com.github.dr-styki.screenrec
-  - com.github.lainsce.notejot
-  - com.github.calo001.fondo
-  - com.github.mdh34.hackup
-  - com.github.mdh34.quickdocs
 
 distro_flatpaks: []

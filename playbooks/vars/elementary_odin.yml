@@ -1,10 +1,9 @@
 ---
-ubuntu_codename: 'bionic'
+ubuntu_codename: 'focal'
 release_packages:
+  - steam-installer
+  - simplescreenrecorder
   - diffuse
-  - steam
-  - libvirt-bin
-  - valkyrie
   - com.github.alainm23.planner
   - com.github.babluboy.bookworm
   - com.github.lainsce.palaura

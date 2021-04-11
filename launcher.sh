@@ -28,12 +28,12 @@ download_special_packages() (
 )
 
 install_special_packages() (
-    if [ ${FREEOFFICE_CHECK} -ne 0];
+    if [ ${FREEOFFICE_CHECK} -ne 0 ];
     then
         echo "Installing freeoffice";
-        apt install -y softmaker-freeoffice-2018_amd64.deb;
+        sudo apt install -y ./softmaker-freeoffice-2018_amd64.deb;
         echo "Adding Freeoffice Repository to Apt Sources"
-        /usr/share/freeoffice2018/add_apt_repo.sh;
+        sudo /usr/share/freeoffice2018/add_apt_repo.sh;
     fi
 )
 
