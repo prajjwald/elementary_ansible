@@ -1,5 +1,12 @@
 ---
-distro_packages: []
+distro_packages: [ ]
   # elementary OS apps
 
-distro_flatpaks: []
+distro_flatpaks:
+  - com.github.alainm23.planner # TODO app - superproductivity feels more powerful
+  - com.github.babluboy.bookworm # ebook reader
+  - io.github.lainsce.Notejot # sticky notes
+  - com.github.calo001.fondo # awesome wallpaper app
+  - com.github.mdh34.hackup # News Reader
+  - com.github.mdh34.quickdocs # Programming Documentation
+  - com.valvesoftware.Steam

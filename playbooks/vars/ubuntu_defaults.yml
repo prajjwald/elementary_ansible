@@ -7,9 +7,9 @@ distro_packages:
   - plank
 
 distro_flatpaks:
-  - com.github.alainm23.planner
-  - com.github.babluboy.bookworm
-  - io.github.lainsce.Notejot
-  - com.github.calo001.fondo
-  - com.github.mdh34.hackup
-  - com.github.mdh34.quickdocs
+  - com.github.alainm23.planner # TODO app - superproductivity feels more powerful
+  - com.github.babluboy.bookworm # ebook reader
+  - io.github.lainsce.Notejot # sticky notes
+  - com.github.calo001.fondo # awesome wallpaper app
+  - com.github.mdh34.hackup # News Reader
+  - com.github.mdh34.quickdocs # Programming Documentation
