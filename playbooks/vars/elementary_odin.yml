@@ -1,15 +1,6 @@
 ---
 ubuntu_codename: 'focal'
 release_packages:
-  - steam-installer
-  - simplescreenrecorder
-distro_flatpaks:
-  - io.github.mightycreak.Diffuse
-  - com.github.alainm23.planner
-  - com.github.babluboy.bookworm
-  - com.github.lainsce.palaura
-  - com.github.dr-styki.screenrec
-  - com.github.lainsce.notejot
-  - com.github.calo001.fondo
-  - com.github.mdh34.hackup
-  - com.github.mdh34.quickdocs
+  - libvirt-clients
+  - libvirt-daemon-system
+  - bridge-utils
