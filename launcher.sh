@@ -14,27 +14,60 @@ EOF
 }
 
 # 0 -> installed, non-zero (1) -> not installed
-[ -f /usr/bin/textmaker18free ]; export FREEOFFICE_CHECK=$?;
+[ -f /usr/bin/textmaker18free ]; export FREEOFFICE_INSTALL_NEEDED=$?;
+export CODENAME=$(awk -F= '/DISTRIB_CODENAME/ {print $2}' /etc/lsb-release);
+# 0 -> not needed, non-zero (1) -> not installed
+[[ "${CODENAME}" != "odin" || -f /usr/lib/x86_64-linux-gnu/wingpanel/libayatana.so ]]; export AYATANA_INSTALL_NEEDED=$?;
 
 # Certain packages seem to take a really long time to download
 # And should not hold up the rest of the install.
 # Freeoffice is one of them - installing out of ansible
+set_ayatana_autostart() {
+    mkdir -p ~/.config/autostart /etc/skel/.config/autostart;
+    cp /etc/xdg/autostart/indicator-application.desktop ~/.config/autostart/;
+    sed -i 's/^OnlyShowIn.*/OnlyShowIn=Unity;GNOME;Pantheon;/' ~/.config/autostart/indicator-application.desktop;
+    sudo cp ~/.config/autostart/indicator-application.desktop /etc/skel/.config/autostart;
+}
+
 download_special_packages() (
-    if [ ${FREEOFFICE_CHECK} -ne 0 ];
+    if [ ${FREEOFFICE_INSTALL_NEEDED} -ne 0 ];
     then
         echo "Downloading freeoffice";
-        wget -cq "https://www.freeoffice.com/download.php?filename=https://www.softmaker.net/down/softmaker-freeoffice-2018_976-01_amd64.deb" -O softmaker-freeoffice-2018_amd64.deb;
+        wget -cq "https://www.freeoffice.com/download.php?filename=https://www.softmaker.net/down/softmaker-freeoffice-2018_976-01_amd64.deb" -O softmaker-freeoffice-2018_amd64.deb&
     fi
+
+    if [ ${AYATANA_INSTALL_NEEDED} -ne 0 ];
+    then
+        echo "Downloading wingpanel ayatana";
+        wget -cq "https://github.com/Lafydev/wingpanel-indicator-ayatana/raw/master/com.github.lafydev.wingpanel-indicator-ayatana_2.0.8_odin.deb" -O wingpanel-indicator-ayatana.deb&
+    fi
+    wait;
 )
 
 install_special_packages() (
-    if [ ${FREEOFFICE_CHECK} -ne 0 ];
+
+    install_packages="";
+    if [ ${FREEOFFICE_INSTALL_NEEDED} -ne 0 ];
     then
         echo "Installing freeoffice";
-        sudo apt install -y ./softmaker-freeoffice-2018_amd64.deb;
+        install_packages="${install_packages} ./softmaker-freeoffice-2018_amd64.deb";
+    fi
+
+    if [ ${AYATANA_INSTALL_NEEDED} -ne 0 ];
+    then
+        echo "Installing Wingpanel Indicator Ayatana";
+        install_packages=" libwingpanel-dev indicator-application ${install_packages} ./wingpanel-indicator-ayatana.deb";
+    fi
+
+    sudo apt install -y ${install_packages};
+
+    if [ ${FREEOFFICE_INSTALL_NEEDED} -ne 0 ];
+    then
         echo "Adding Freeoffice Repository to Apt Sources"
         sudo /usr/share/freeoffice2018/add_apt_repo.sh;
     fi
+
+
 )
 
 download_special_packages&
